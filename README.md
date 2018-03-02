@@ -1,13 +1,13 @@
 <img src="./extra/small_hnl_logo.png" height="128"> <img src="./extra/small_cidlab_logo.png" height="128">
 
-# encodingN200 0.1.0
+# encodingN200 0.1.1
 EEG measures of neural processing reflect human visaual encoding time (encodingN200).
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
 
-### Research Questions
+### Significance
 
-Many common models of speeded decision-making assume that cognitive processing required occurs in three sequential time periods: 1) a period of visual encoding, 2) a period of decision-making, and then 3) a period of motor response time. Our goal is to find estimates of this first time period in milliseconds for each subject using a mixture of human behavior observations (choice and reaction time) and evoked electroencephalographic (EEG) measures. 
+Encoding of a sensory stimulus is the first step in perceptual decision making. From this analysis we report evidence that human evoked potentials (EPs) around 200 milliseconds after stimulus presentation track the time of extrastriate cortical processing before visual evidence accumulation during decision making. These EP latencies vary across individuals and depend upon external visual noise. We present linear regressions, framed in the context of cognitive theory, to test 1-to-1 relationships between these EP latencies and reaction time distributions. Hierarchical Bayesian model-fitting was also used to relate these EPs to a specific cognitive parameter that tracks time related to visual encoding. This work adds to the growing literature that suggests that EEG records can track the onset of evidence accumulation.
 
 ### Hypothesis
 
