@@ -1,0 +1,49 @@
+
+model {
+	##########
+	# Fixed Parameters
+	beta <- .5
+	##########
+	# Between-subject variability in non-decision time
+	tersubsd ~ dgamma(.2,1)
+
+	# Between-subject variability in drift
+	deltasubsd ~ dgamma(1,1)
+
+	# Between-subject variability in boundary separation
+	alphasubsd ~ dgamma(1,1)
+
+	##########
+	# Block-level parameters
+	##########
+
+    # Condition-level non-decision time
+	tercond ~ dnorm(.3, pow(.25,-2))
+
+	# Condition-level drift rate
+	deltacond ~ dnorm(1, pow(2, -2))
+
+	# Condition-level boundary separation
+	alphacond ~ dnorm(1, pow(.5,-2))
+
+	# Subject-level parameters
+	for (sub in 1:nsubs) {
+		# Subject-level non-decision time
+		tersub[sub] ~ dnorm(tercond, pow(tersubsd, -2))T(0,1)
+
+		# Subject-level drift rate
+		deltasub[sub] ~ dnorm(deltacond, pow(deltasubsd, -2))T(-9, 9)
+
+		# Subject-level boundary separation
+		alphasub[sub] ~ dnorm(alphacond, pow(alphasubsd, -2))T(.1,3)
+	}
+
+	##########
+	# Wiener likelihoods
+	for (i in 1:N) {
+		y[i] ~ dwiener(alphasub[subject[i]],
+		tersub[subject[i]],
+		beta,
+		deltasub[subject[i]])
+	}
+}
