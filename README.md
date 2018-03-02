@@ -1,6 +1,6 @@
 <img src="./extra/small_hnl_logo.png" height="128"> <img src="./extra/small_cidlab_logo.png" height="128">
 
-# encodingN200 0.1.1
+# encodingN200 0.1.2
 EEG measures of neural processing reflect human visaual encoding time (encodingN200).
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -26,6 +26,8 @@ Non-decision times for each session of data, as estimated by drift-diffusion mod
 [Scientific Python libraries](https://www.continuum.io/downloads)
 
 [Python Repository: pyjags](https://github.com/tmiasko/pyjags)
+
+[R](https://www.r-project.org/) (for figures)
 
 ### Downloading
 
