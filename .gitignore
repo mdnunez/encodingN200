@@ -1,7 +1,7 @@
 ##https://github.com/github/gitignore
 
 # Ignore figures
-*.png
+figures/*.png
 
 # Ignore .mat data
 *.mat
