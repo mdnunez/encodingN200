@@ -1,17 +1,17 @@
 <img src="./extra/small_hnl_logo.png" height="128"> <img src="./extra/small_cidlab_logo.png" height="128">
 
-# encodingN200 0.1.2
-EEG measures of neural processing reflect human visaual encoding time (encodingN200).
+# encodingN200 0.1.3
+EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
 
 ### Significance
 
-Encoding of a sensory stimulus is the first step in perceptual decision making. From this analysis we report evidence that human evoked potentials (EPs) around 200 milliseconds after stimulus presentation track the time of extrastriate cortical processing before visual evidence accumulation during decision making. These EP latencies vary across individuals and depend upon external visual noise. We present linear regressions, framed in the context of cognitive theory, to test 1-to-1 relationships between these EP latencies and reaction time distributions. Hierarchical Bayesian model-fitting was also used to relate these EPs to a specific cognitive parameter that tracks time related to visual encoding. This work adds to the growing literature that suggests that EEG records can track the onset of evidence accumulation.
+Encoding of a sensory stimulus is the first step in perceptual decision making. From these analyses we report evidence that human evoked potentials (EPs) around 200 milliseconds after stimulus presentation track the time of extrastriate cortical processing before visual evidence accumulation during decision making. These EP latencies vary across individuals and depend upon external visual noise. We present linear regressions, framed in the context of cognitive theory, to test 1-to-1 relationships between these EP latencies and reaction time distributions. Hierarchical Bayesian model-fitting was also used to relate these EPs to a specific cognitive parameter that tracks time related to visual encoding. This work adds to the growing literature that suggests that EEG records can track the onset of evidence accumulation.
 
 ### Hypothesis
 
-Non-decision times for each session of data, as estimated by drift-diffusion models of accuracy and reaction time distributions, will have a 1-to-1 linear relationship with N200 negative peak latency time (an event-related potential possibly reflecting visual encoding time)
+In this study, we directly tested the hypothesis that N200 latencies (EEG stimulus-locked negative peaks occurring between 150 and 275 milliseconds in female and male human subjects) reflect visual processing time that occurs before evidence accumulation, labeled visual encoding time (VET), in the context of cognitive theory. 
 
 ### Prerequisites
 
