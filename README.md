@@ -1,6 +1,6 @@
 <img src="./extra/small_hnl_logo.png" height="128"> <img src="./extra/small_cidlab_logo.png" height="128">
 
-# encodingN200 0.1.3
+# encodingN200 0.1.4
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -50,6 +50,9 @@ addpath(genpath(emloc));
 encodingN200 is licensed under the GNU General Public License v3.0 and written by Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine.
 
 ### Further Reading
+
+Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (preprint).
+[Visual encoding signals around 200 milliseconds track onset of evidence accumulation during human decision making](https://www.biorxiv.org/content/early/2018/03/03/275727)
 
 Nunez, M. D., Vandekerckhove, J., & Srinivasan, R. (2017).
 [How attention influences perceptual decision making: Single-trial EEG correlates of drift-diffusion model parameters.](https://www.researchgate.net/publication/298275031_How_attention_influences_perceptual_decision_making_Single-trial_EEG_correlates_of_drift-diffusion_model_parameters)
