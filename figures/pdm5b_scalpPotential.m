@@ -1,6 +1,6 @@
-function pdm5b_corticallapfig(sp)
+function pdm5b_scalpPotential(sp)
 
-%pdm5b_corticallapfig - Creates cortical Laplacian images on brains 
+%pdm5b_scalpPotential - Creates scalp potential images
 %
 % Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
 %
@@ -20,9 +20,7 @@ function pdm5b_corticallapfig(sp)
 %% Record of Revisions
 %   Date           Programmers               Description of change
 %   ====        =================            =====================
-%  12/29/17        Michael Nunez             Adapted from pdm3b_corticallapfig.m
-%  02/27/18 	   Michael Nunez           Plot scalp Current Source Density
-%  04/13/18        Michael Nunez             Commenting clarification
+%  04/13/18        Michael Nunez             Adapted from pdm5b_corticallapfig.m
 
 
 %% Code
@@ -30,8 +28,7 @@ function pdm5b_corticallapfig(sp)
 fontsize = 40;
 
 setpainters;
-load ScalpN200CSD.mat;
-load InverseN200Laplacian.mat;
+load ScalpN200Potential.mat;
 load ~/data10/michael/headmodels/s05.mat;
 
 muVtoV = 1e-6; %Conversion from muVs tp Vs
@@ -39,34 +36,11 @@ muVtoV = 1e-6; %Conversion from muVs tp Vs
 
 viewpos = {{-60,8},{60,8},{0,0}};
 
-% f1 = figure('units','normalized','outerposition',[0 0 1 1]);
-% h = drawmesh(Brain);
-% setmesh(h,'interp',inversesolution);
-% set(gca,'CLim', [-20 20]); %Note that this scale is muAmps because the muVtoV was not applied
-% newmap = (bone + jet)/2;
-% colormap(newmap);
-
-% %Color bar
-% cb = colorbar('EastOutside','Fontsize',fontsize);
-% yl = ylabel(cb,'\muA/mm^2','Fontsize',fontsize);
-% set(yl,'Rotation',270);
-
-% %h2 = drawmesh(Scalp);
-% %setmesh(h2,'glassy');
-% %alpha(h2,.1);
-% %Change viewpoint (azimuth and elevation) of the subplots
-% view(gca,viewpos{sp}{:});
-
 
 f2=figure('units','normalized','outerposition',[0 0 1 1]);
 h2 = drawmesh(Scalp);
-setmesh(h2,'interp',scalpCSD);
-set(gca,'CLim', [-.03 .03]);
+setmesh(h2,'interp',scalpPotential);
+set(gca,'CLim', [-30 30]);
 newmap = (bone + jet)/2;
 colormap(newmap);
 view(gca,viewpos{sp}{:});
-
-
-%% Save figure
-
-% export_fig(f1,sprintf('corticalLap_%i',sp),'-opengl','-jpg','-r200');

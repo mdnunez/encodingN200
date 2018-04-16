@@ -22,6 +22,7 @@
 %  12/15/17        Michael Nunez           Save out N200chanpos.mat
 %  12/29/17        Michael Nunez          Updating new load locations
 %  02/27/18 	   Michael Nunez        Save out scalp Current Source Density
+%  04/13/18        Michael Nunez            Change percentage valid
 
 % To do:
 % 1) Create simulated dura surface
@@ -134,17 +135,17 @@ end
 
 %Plot the mean response
 fprintf('Plotting the mean response on a 3D scalp...\n');
-mask = mean(scalpdata(:,goodchan),1)*Electrode.directspline3D';
+scalpPotential = mean(scalpdata(:,goodchan),1)*Electrode.directspline3D';
 
 %Zero out periphery values
 u1=find(Scalp.Vertex(:,3)<-40);
 u3=find(Scalp.Vertex(:,2)>39 & Scalp.Vertex(:,3)<14);
-mask(u1)=0;
-mask(u3)=0;
+scalpPotential(u1)=0;
+scalpPotential(u3)=0;
 
 f1 = figure('units','normalized','outerposition',[0 0 1 1]);
 h = drawmesh(Scalp);
-setmesh(h,'interp',mask);
+setmesh(h,'interp',scalpPotential);
 % set(gca,'CLim', [-.0025 .0025]);
 colormap jet
 alpha(.8);
@@ -152,6 +153,9 @@ h2 = drawmesh(Brain);
 set(h2,'facecolor',[1 1 1],'edgecolor',[0 0 0]);
 %Change viewpoint (azimuth and elevation) of the figure
 view(gca,0,0);
+
+fprintf('Saving the scalp potential...\n');
+save('ScalpN200Potential.mat','scalpPotential');
 
 
 
@@ -254,7 +258,7 @@ view(gca,0,0);
 
 locinds = [];
 for l=1:size(theselocs,1)
-    [~,locind] = min(sqrt(sum((ones(17503,1)*theselocs(l,:) - Brain.Vertex).^2,2)));
+    [~,locind] = min(sqrt(sum((ones(size(Brain.Vertex,1),1)*theselocs(l,:) - Brain.Vertex).^2,2)));
     locinds(l) = locind;
 end
 
@@ -265,27 +269,48 @@ foundlocs(:)
 % Find coritcal locations by performing localization for each EEG session and noise condition
 fprintf('Finding coritcal locations by performing localization for each EEG session and noise condition...\n')
 allsubfoundlocs = cell(0);
+allsubfoundmins = cell(0);
 for s=1:size(scalpdata,1)
 	localizedvals = scalpdata(s,goodchan)*Electrode.lapinverse';
-	labelindex = (localizedvals < -10);
 	theselocs = Brain.Vertex(localizedvals < -10,:);
+	minlocs = Brain.Vertex(argmin(localizedvals), :);
 
 	locinds = [];
 	for l=1:size(theselocs,1)
-	    [~,locind] = min(sqrt(sum((ones(17503,1)*theselocs(l,:) - Brain.Vertex).^2,2)));
+	    [~,locind] = min(sqrt(sum((ones(size(Brain.Vertex,1),1)*theselocs(l,:) - Brain.Vertex).^2,2)));
 	    locinds(l) = locind;
 	end
 	tempfoundlocs = unique(Dest.lab(Dest.ind(locinds)));
 	allsubfoundlocs = {allsubfoundlocs{:} tempfoundlocs{:}};
+
+	minlocinds = [];
+	for l=1:size(minlocs,1)
+	    [~,locind] = min(sqrt(sum((ones(size(Brain.Vertex,1),1)*minlocs(l,:) - Brain.Vertex).^2,2)));
+	    minlocinds(l) = locind;
+	end
+
+	tempfoundmins = unique(Dest.lab(Dest.ind(minlocinds)));
+	allsubfoundmins = {allsubfoundmins{:} tempfoundmins{:}};
 end
+
 uniquefoundlocs = unique(allsubfoundlocs);
 totaloffoundlocs = zeros(1,length(uniquefoundlocs));
 for l=1:length(uniquefoundlocs),
 	totaloffoundlocs(l) = sum(strcmp(allsubfoundlocs,uniquefoundlocs{l}));
 end
 
-percentagevalid = .6;
-foundlocs2 = uniquefoundlocs(find(totaloffoundlocs > percentagevalid*size(scalpdata,1)));
-fprintf('Locations found from localized Laplacian of each EEG session and condition:\n');
-foundlocs2(:)
+uniquefoundmins = unique(allsubfoundmins);
+totaloffoundmins = zeros(1,length(uniquefoundmins));
+for l=1:length(uniquefoundmins),
+	totaloffoundmins(l) = sum(strcmp(allsubfoundmins,uniquefoundmins{l}));
+end
 
+
+percentagevalid = .7; % 1 corresponds to 100 percent
+foundlocs2 = uniquefoundlocs(find(totaloffoundlocs > percentagevalid*size(scalpdata,1)));
+fprintf('All locations found from localized Laplacian of each EEG session and condition with cutoff of %d %%:\n',percentagevalid*100);
+foundlocs2(:)
+[sortedcounts,sortbytotal] = sort(totaloffoundmins,2,'descend');
+for c=1:length(uniquefoundmins),
+	fprintf('%s was the minimum of %.1f%% observations \n',uniquefoundmins{sortbytotal(c)},(sortedcounts(c)/size(scalpdata,1))*100);
+end

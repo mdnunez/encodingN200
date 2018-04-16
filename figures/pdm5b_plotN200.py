@@ -22,6 +22,7 @@
 # 01/03/18     Michael Nunez               Coverted from pdm5b_prepinputs.py
 # 01/05/18     Michael Nunez                  Print summary statistics
 # 02/27/18     Michael Nunez               Change fontsize, print 10th percentiles
+# 04/13/18     Michael Nunez                Change figure size
 
 # Imports
 from __future__ import division
@@ -67,7 +68,7 @@ rt = trialdata[:, 2]
 
 # Plot all N200 waveforms
 print 'Plotting the N200 data'
-plt.figure()
+plt.figure(figsize=(12, 6))
 plt.plot(np.arange(-100, 275), dataout['n1data'])
 zeroline = plt.plot(np.array([0., 0.]), np.array([-.15, .15]))
 plt.setp(zeroline, linewidth=3, linestyle='--')
@@ -95,7 +96,7 @@ plt.fill_between(x_lat, p_lat, np.zeros((100)), color=blue)
 frame = plt.gca()
 frame.axes.get_yaxis().set_visible(False)
 plt.tick_params(axis='both', which='major', labelsize=fontsize)
-plt.xlabel('Time (ms) after target onset', fontsize=fontsize)
+plt.xlabel('Time (ms) after Gabor onset', fontsize=fontsize)
 
 # Save the figure
 print 'Saving the figure...'
