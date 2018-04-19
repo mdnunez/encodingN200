@@ -3,7 +3,7 @@
 ### Citation
 
 Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (preprint).
-[Visual encoding signals around 200 milliseconds track onset of evidence accumulation during human decision making.](https://www.biorxiv.org/content/early/2018/03/03/275727) bioRxiv. doi: 10.1101/275727
+[The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/04/19/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200   0.1.5
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
