@@ -23,6 +23,7 @@
 #                                            Modified deflection calculation
 # 12/01/17                             Change deflection detection window
 # 12/04/17                  Fix finddeflection output, use last found sample
+# 06/01/18                                Create index for N200 waveforms
 
 # Imports
 from __future__ import division
@@ -83,6 +84,8 @@ dataout['missing'] = np.zeros((480 * (12 * 2 + 4 * 7)))
 dataout['train'] = np.ones((480 * (12 * 2 + 4 * 7)))
 dataout['condition'] = np.zeros((480 * (12 * 2 + 4 * 7)))
 dataout['n1data'] = np.zeros((375, 3 * (12 * 2 + 4 * 7)))
+dataout['n1datacond'] = np.zeros((3 * (12 * 2 + 4 * 7)))
+dataout['n1dataexp'] = np.zeros((3 * (12 * 2 + 4 * 7)))
 
 # Conditions
 snrlabels = ['low', 'med', 'high']
@@ -136,6 +139,8 @@ for exp in dataout['experiments']:
                         # the response interval
                         dataout['n1data'][:, n1dataindx] = svds['svd_rint_%s' % (snrlabels[condtrack])][
                             'u'][0][0][0:375, 0]
+                        dataout['n1datacond'][n1dataindx] = condtrack
+                        dataout['n1dataexp'][n1dataindx] = exptrack
                         n1dataindx += 1
                         dataout['n1lat'][thesetrials] = np.argmin(
                             svds['svd_rint_%s' % (snrlabels[condtrack])]['u'][0][0][250:375, 0]) + 150
