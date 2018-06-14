@@ -21,6 +21,8 @@
 #  12/06/17        Michael Nunez                 Original code
 #  02/23/18        Michael Nunez          Addition of deflection time
 
+## To do: Generate plotly, incorporate changes from grant materials
+
 ## Necessary packages
 library(ggplot2)
 library(ggjoy)

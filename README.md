@@ -6,7 +6,7 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (preprint).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/04/19/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200  
-#### (Repository version 0.2.2)
+#### (Repository version 0.3.0)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -56,6 +56,9 @@ addpath(genpath(emloc));
 encodingN200 is licensed under the GNU General Public License v3.0 and written by Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine.
 
 ### Further Reading
+
+Lui, K. K., Nunez, M. D., Cassidy, J. M., Vandekerckhove, J., Cramer, S. C., & Srinivasan, R. (preprint).
+[Timing of readiness potentials reflect a decision-making process in the human brain.](https://www.biorxiv.org/content/early/2018/06/04/338806) bioRxiv. doi: 10.1101/338806
 
 Nunez, M. D., Vandekerckhove, J., & Srinivasan, R. (2017).
 [How attention influences perceptual decision making: Single-trial EEG correlates of drift-diffusion model parameters.](https://www.researchgate.net/publication/298275031_How_attention_influences_perceptual_decision_making_Single-trial_EEG_correlates_of_drift-diffusion_model_parameters)
