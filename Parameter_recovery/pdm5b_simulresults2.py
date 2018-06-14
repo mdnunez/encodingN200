@@ -198,16 +198,16 @@ for m in range(1, nsims + 1):
     betas[m - 1, 1] = tempbetas1[0]
     # Note that simuldiff() is on a different evidence scale since the
     # diffusion parameter is .1 and dwiener assumes the diffusion parameter =1
-    plt.figure()
-    recovery(samples[m]['deltasub'][:],
-             genparam['deltasub'][(m - 1), :].T * 10)
-    plt.title('Recovery of Mean Drift Rates from model fit, Model %i' %
-              (m), fontsize=16)
-    plt.figure()
-    recovery(samples[m]['alphasub'][:],
-             genparam['alphasub'][(m - 1), :].T * 10)
-    plt.title('Recovery of Evidence bounds from model fit, Model %i' %
-              (m), fontsize=16)
+    # plt.figure()
+    # recovery(samples[m]['deltasub'][:],
+    #          genparam['deltasub'][(m - 1), :].T * 10)
+    # plt.title('Recovery of Mean Drift Rates from model fit, Model %i' %
+    #           (m), fontsize=16)
+    # plt.figure()
+    # recovery(samples[m]['alphasub'][:],
+    #          genparam['alphasub'][(m - 1), :].T * 10)
+    # plt.title('Recovery of Evidence bounds from model fit, Model %i' %
+    #           (m), fontsize=16)
 
 plt.figure()
 plt.scatter(np.arange(1, nsims + 1), betas[:, 0])

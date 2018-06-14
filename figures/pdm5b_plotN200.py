@@ -23,6 +23,7 @@
 # 01/05/18     Michael Nunez                  Print summary statistics
 # 02/27/18     Michael Nunez               Change fontsize, print 10th percentiles
 # 04/13/18     Michael Nunez                Change figure size
+# 06/13/18     Michael Nunez        Export standard deviations of subject measures
 
 # Imports
 from __future__ import division
@@ -147,6 +148,7 @@ for truesub in np.int8(np.unique(truesubject)):
 
 print np.min(subn1lat)
 print np.mean(subn1lat)
+print np.std(subn1lat)
 print np.max(subn1lat)
 print np.min(subn1deflec)
 print np.mean(subn1deflec)

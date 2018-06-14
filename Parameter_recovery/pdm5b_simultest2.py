@@ -202,7 +202,7 @@ trackvars = ['tersubsd', 'deltasubsd', 'alphasubsd',
              'probsub']
 
 
-for n in range(4, nsims):
+for n in range(8, nsims):
     #Initialize vectors
     N = np.sum(genparam['rt'][n, :, :] > .01) #Use 1 ms cutoff
     subject = np.zeros(N)
