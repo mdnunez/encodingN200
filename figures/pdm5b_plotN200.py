@@ -148,7 +148,6 @@ for truesub in np.int8(np.unique(truesubject)):
 
 print np.min(subn1lat)
 print np.mean(subn1lat)
-print np.std(subn1lat)
 print np.max(subn1lat)
 print np.min(subn1deflec)
 print np.mean(subn1deflec)
@@ -166,3 +165,9 @@ print stats.pearsonr(subn1lat, subn1deflec)
 print stats.pearsonr(subn1lat, subrt10)
 print stats.pearsonr(subn1deflec, subrt10)
 print stats.pearsonr(subrtmed, subacc)
+
+print np.std(subn1lat)
+print np.std(subn1deflec)
+print np.std(subrt10)
+print np.std(subrtmed)
+print np.std(subacc)
