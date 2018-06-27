@@ -20,6 +20,7 @@
 #   ====        =================            =====================
 #  01/26/18        Michael Nunez                 Original code
 #  01/29/18        Michael Nunez                 Remove title
+#  06/18/18        Michael Nunez           Inclusion of lapse trials
 
 ## Necessary packages
 library(ggplot2)
@@ -33,7 +34,7 @@ loadloc = '../Models'
 
 # Read in the reaction times
 samples = readMat(paste(loadloc,
-  '/jagsmodel_all_n1lat_randomJan_23_18_12_37.mat',sep=""))
+  '/jagsmodel_all_n1lat_random_lapseJun_14_18_11_40.mat',sep=""))
 
 mainN200effect = as.vector(samples[1]$n1gammault[1,1,,])
 print(sprintf('Length of N200 effect posterior samples is %d',length(mainN200effect)))
@@ -41,7 +42,7 @@ mainN200effectCI = quantile(mainN200effect, prob=c(.025,.5,.975))
 print(sprintf('Effect (median posterior and 95%% credible interval) of trial-averaged N200 latency on non-decision time: %.2f, CI: [%.2f, %.2f]',mainN200effectCI[2],mainN200effectCI[1],mainN200effectCI[3]));
 mainN200effect_density = density(mainN200effect)
 x11()
-plot(N200effect_density)
+plot(mainN200effect_density)
 
 
 nsamps = length(mainN200effect)
@@ -50,23 +51,23 @@ colnames(N200effects) <- c("Effect", "Condition")
 
 N200effects$Effect[1:nsamps] = as.vector(samples[1]$n1gammault[1,1,,])
 N200effects$Condition[1:nsamps] = sprintf('G')
-N200effects$Effect[(nsamps+1):(nsamps*2)] = as.vector(samples[4]$n1gammacond[1,1,1,,])
+N200effects$Effect[(nsamps+1):(nsamps*2)] = as.vector(samples[4]$n1gammacond[1,2,1,,])
 N200effects$Condition[(nsamps+1):(nsamps*2)] = sprintf('A')
-N200effects$Effect[(nsamps*2+1):(nsamps*3)] = as.vector(samples[4]$n1gammacond[1,1,2,,])
+N200effects$Effect[(nsamps*2+1):(nsamps*3)] = as.vector(samples[4]$n1gammacond[1,2,2,,])
 N200effects$Condition[(nsamps*2+1):(nsamps*3)] = sprintf('B')
-N200effects$Effect[(nsamps*3+1):(nsamps*4)] = as.vector(samples[4]$n1gammacond[1,1,3,,])
+N200effects$Effect[(nsamps*3+1):(nsamps*4)] = as.vector(samples[4]$n1gammacond[1,2,3,,])
 N200effects$Condition[(nsamps*3+1):(nsamps*4)] = sprintf('C')
-N200effects$Effect[(nsamps*4+1):(nsamps*5)] = as.vector(samples[4]$n1gammacond[1,2,1,,])
+N200effects$Effect[(nsamps*4+1):(nsamps*5)] = as.vector(samples[4]$n1gammacond[1,1,1,,])
 N200effects$Condition[(nsamps*4+1):(nsamps*5)] = sprintf('D')
-N200effects$Effect[(nsamps*5+1):(nsamps*6)] = as.vector(samples[4]$n1gammacond[1,2,2,,])
+N200effects$Effect[(nsamps*5+1):(nsamps*6)] = as.vector(samples[4]$n1gammacond[1,1,2,,])
 N200effects$Condition[(nsamps*5+1):(nsamps*6)] = sprintf('E')
-N200effects$Effect[(nsamps*6+1):(nsamps*7)] = as.vector(samples[4]$n1gammacond[1,2,3,,])
+N200effects$Effect[(nsamps*6+1):(nsamps*7)] = as.vector(samples[4]$n1gammacond[1,1,3,,])
 N200effects$Condition[(nsamps*6+1):(nsamps*7)] = sprintf('F')
 
-condlabs = c("Exp. 1 High Noise", "Exp. 1 Med Noise", "Exp. 1 Low Noise", "Exp. 2 High Noise", "Exp. 2 Med Noise", "Exp. 2 Low Noise", "Overall (hierarchical) effect") 
+condlabs = c("Exp. 2 High Noise", "Exp. 2 Med Noise", "Exp. 2 Low Noise", "Exp. 1 High Noise", "Exp. 1 Med Noise", "Exp. 1 Low Noise", "Overall (hierarchical) effect") 
 
-#Color-blind friendly palette (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette)
-cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=7
+cbbPalette <- c("#000000",  "#E6AB02", "#66A61E", "#E7298A", "#D95F02", "#1B9E77", "#7570B3", "#A6761D")
 
 
 ## Plot
@@ -93,7 +94,7 @@ for (n in seq(1,7)) {
 	} else {
 		yplace = n - 0.5
 	}
-	plot1 = plot1 + annotate("text",x=2,y=yplace,label=sprintf('BF1: %3.2f',BF[n]),size=5,colour = 'blue')
+	plot1 = plot1 + annotate("text",x=2.5,y=yplace,label=sprintf('BF1: %3.2f',BF[n]),size=5,colour = 'blue')
 }
 plot(plot1)
 dev.off()

@@ -39,7 +39,7 @@ function pdmdata = pdm5_dataext(varargin)
 %   Date           Programmers               Description of change
 %   ====        =================            =====================
 %  1/12/16        Michael Nunez             Adapted from pdm4_dataext
-%  6/22/16        Michael Nunez                  Clarify filtering
+%  6/14/18        Michael Nunez                  Clarify filtering
 
 %% Initial
 if nargin < 1
@@ -110,7 +110,7 @@ try
             [raw, srate, info] = rdata([cntdir,'/',cnt(bnum).name],'egi');
         end
 
-        %Filtering step ([1 100] bandpass and detrending-baselining) using Cort's filtereeg function
+        %Filtering step ([.25 100] bandpass and detrending-baselining) using Cort's filtereeg function
         [tempdata, ~] = rmchannel(raw',badchans); %Remove photocell channels and average reference the data
         block = pdm5_filtereeg(tempdata,srate);
         [block, ~] = rmchannel(block,[]); %Average reference the remaining data

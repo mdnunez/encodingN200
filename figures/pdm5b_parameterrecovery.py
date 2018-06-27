@@ -23,6 +23,8 @@
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
 # 01/30/18      Michael Nunez              Converted from pdm5b_simulresults.py
+# 06/18/18      Michael Nunez             Addition of results with modeled lapse trials
+# 06/20/18      Michael Nunez           Addition of results without 350 ms cutoffs
 
 # Imports
 import numpy as np
@@ -157,38 +159,63 @@ nsims = 30
 nsubs = 100
 
 genparam = sio.loadmat('../Parameter_recovery/genparam_test.mat')
+rtpercentiles_cutoff = np.zeros((nsims, nsubs))
 rtpercentiles = np.zeros((nsims, nsubs))
 for n in range(0, nsims):
     for s in range(0, nsubs):
-        # Use 350 ms cutoff
-        whereindx = np.where(genparam['rt'][n, s, :] > .35)
+        # Use no cutoff
         rtpercentiles[n, s] = np.percentile(
-            genparam['rt'][n, s, whereindx], 10, axis=-1)
+            genparam['rt'][n, s, :], 10, axis=-1)
+        # Use 350 ms cutoff
+        whereindx_cutoff = np.where(genparam['rt'][n, s, :] > .35)
+        rtpercentiles_cutoff[n, s] = np.percentile(
+            genparam['rt'][n, s, whereindx_cutoff], 10, axis=-1)
 
-linearmodel = '../Parameter_recovery/modelfits/trialparam_test_model%i.mat'
+linearmodel1 = '../Parameter_recovery/modelfits/trialparam_test_model%i.mat'
+linearmodel2 = '../Parameter_recovery/modelfits/trialparam2_test_model%i.mat'
+linearmodel3 = '../Parameter_recovery/modelfits/trialparam3_test_model%i.mat'
+
 
 diags = dict()
 samples = dict()
-betas = np.empty((nsims, 2))
+diags2 = dict()
+samples2 = dict()
+diags3 = dict()
+samples3 = dict()
+betas = np.empty((nsims, 5))
 
 for m in range(1, nsims + 1):
-    samples[m] = sio.loadmat(linearmodel % (m))
+    samples[m] = sio.loadmat(linearmodel1 % (m))
+    samples2[m] = sio.loadmat(linearmodel2 % (m))
+    samples3[m] = sio.loadmat(linearmodel3 % (m))
     diags[m] = diagnostic(samples[m])
+    diags2[m] = diagnostic(samples2[m])
+    diags3[m] = diagnostic(samples3[m])
     tempbetas0 = np.polyfit(
         genparam['tersub'][(m - 1), :].T, rtpercentiles[(m - 1), :], deg=1)
     betas[m - 1, 0] = tempbetas0[0]
     tempbetas1 = np.polyfit(genparam['tersub'][(m - 1), :] * 1000, np.median(
         samples[m]['tersub'][:].reshape((nsubs, 6000)), axis=1) * 1000, deg=1)
     betas[m - 1, 1] = tempbetas1[0]
+    tempbetas2 = np.polyfit(genparam['tersub'][(m - 1), :] * 1000, np.median(
+        samples2[m]['tersub'][:].reshape((nsubs, 6000)), axis=1) * 1000, deg=1)
+    betas[m - 1, 2] = tempbetas2[0]
+    tempbetas3 = np.polyfit(genparam['tersub'][(m - 1), :] * 1000, np.median(
+        samples3[m]['tersub'][:].reshape((nsubs, 6000)), axis=1) * 1000, deg=1)
+    betas[m - 1, 3] = tempbetas3[0]
+    tempbetas4 = np.polyfit(
+        genparam['tersub'][(m - 1), :].T, rtpercentiles_cutoff[(m - 1), :], deg=1)
+    betas[m - 1, 4] = tempbetas4[0]
+
 
 plt.figure()
 plt.scatter(genparam['tersub'][0, :].T *
             1000, rtpercentiles[0, :] * 1000)
-tempbetas4 = np.polyfit(genparam['tersub'][0, :].T *
+tempbetas5 = np.polyfit(genparam['tersub'][0, :].T *
             1000, rtpercentiles[0, :] * 1000, deg=1)
-regress4 = plt.plot(genparam['tersub'][0, :].T *
-            1000, tempbetas4[0] * genparam['tersub'][0, :].T *
-            1000 + tempbetas4[1], linewidth=3)
+regress5 = plt.plot(genparam['tersub'][0, :].T *
+            1000, tempbetas5[0] * genparam['tersub'][0, :].T *
+            1000 + tempbetas5[1], linewidth=3)
 plt.plot(genparam['tersub'][0, :].T * 1000, genparam['tersub']
          [0, :].T * 1000, linewidth=3, color=np.array([1, .3, 0]))
 plt.xlabel('Real non-decision time (ms)', fontsize=16)
@@ -198,8 +225,6 @@ recovery(samples[1]['tersub'][:] * 1000,
          genparam['tersub'][0, :].T * 1000)
 plt.xlabel('Real non-decision time (ms)', fontsize=16)
 plt.ylabel('Non-decision time posteriors (ms)', fontsize=16)
-tempbetas1 = np.polyfit(genparam['tersub'][0, :] * 1000, np.median(
-    samples[1]['tersub'][:].reshape((nsubs, 6000)), axis=1) * 1000, deg=1)
 # Note that simuldiff() is on a different evidence scale since the
 # diffusion parameter is .1 and dwiener assumes the diffusion parameter =1
 plt.figure()
@@ -221,10 +246,9 @@ converttoindex = percentcontam*2.9 + 1 #Convert to range [1, 30]
 
 plt.figure()
 plt.scatter(np.arange(1, nsims + 1), betas[:, 0])
-tempbetas2 = np.polyfit(np.arange(1, nsims + 1), betas[:, 0], deg=1)
-
-regress2 = plt.plot(np.arange(1, nsims + 1), tempbetas2[0] * np.arange(
-    1, nsims + 1) + tempbetas2[1], linewidth=3)
+tempbetas5 = np.polyfit(np.arange(1, nsims + 1), betas[:, 0], deg=1)
+regress5 = plt.plot(np.arange(1, nsims + 1), tempbetas5[0] * np.arange(
+    1, nsims + 1) + tempbetas5[1], linewidth=3)
 ax1 = plt.gca()
 ax1.set_xticks(converttoindex)
 ax1.set_xticklabels(percentcontam)
@@ -236,9 +260,9 @@ plt.ylabel('Beta value', fontsize=16)
 
 plt.figure()
 plt.scatter(np.arange(1, nsims + 1), betas[:, 1])
-tempbetas3 = np.polyfit(np.arange(1, nsims + 1), betas[:, 1], deg=1)
-regress3 = plt.plot(np.arange(1, nsims + 1), tempbetas3[0] * np.arange(
-    1, nsims + 1) + tempbetas3[1], linewidth=3)
+tempbetas6 = np.polyfit(np.arange(1, nsims + 1), betas[:, 1], deg=1)
+regress6 = plt.plot(np.arange(1, nsims + 1), tempbetas6[0] * np.arange(
+    1, nsims + 1) + tempbetas6[1], linewidth=3)
 ax2 = plt.gca()
 ax2.set_xticks(converttoindex)
 ax2.set_xticklabels(percentcontam)
@@ -248,9 +272,54 @@ plt.title('Changing slopes of real NDT versus posterior medians', fontsize=16)
 plt.xlabel('Percentage of contaminant trials (%)', fontsize=16)
 plt.ylabel('Beta value', fontsize=16)
 
+plt.figure()
+plt.scatter(np.arange(1, nsims + 1), betas[:, 2])
+tempbetas7 = np.polyfit(np.arange(1, nsims + 1), betas[:, 2], deg=1)
+regress7 = plt.plot(np.arange(1, nsims + 1), tempbetas7[0] * np.arange(
+    1, nsims + 1) + tempbetas7[1], linewidth=3)
+ax2 = plt.gca()
+ax2.set_xticks(converttoindex)
+ax2.set_xticklabels(percentcontam)
+plt.xlim([1, 30])
+plt.ylim([0.5, 1.5])
+plt.title('Changing slopes of real NDT versus posterior medians with lapse trials and 350 ms cutoffs', fontsize=16)
+plt.xlabel('Percentage of contaminant trials (%)', fontsize=16)
+plt.ylabel('Beta value', fontsize=16)
+
+plt.figure()
+plt.scatter(np.arange(1, nsims + 1), betas[:, 3])
+tempbetas8 = np.polyfit(np.arange(1, nsims + 1), betas[:, 3], deg=1)
+regress8 = plt.plot(np.arange(1, nsims + 1), tempbetas8[0] * np.arange(
+    1, nsims + 1) + tempbetas8[1], linewidth=3)
+ax2 = plt.gca()
+ax2.set_xticks(converttoindex)
+ax2.set_xticklabels(percentcontam)
+plt.xlim([1, 30])
+plt.ylim([0.5, 1.5])
+plt.title('Changing slopes of real NDT versus posterior medians with lapse trials', fontsize=16)
+plt.xlabel('Percentage of contaminant trials (%)', fontsize=16)
+plt.ylabel('Beta value', fontsize=16)
+
+plt.figure()
+plt.scatter(np.arange(1, nsims + 1), betas[:, 4])
+tempbetas9 = np.polyfit(np.arange(1, nsims + 1), betas[:, 4], deg=1)
+regress9 = plt.plot(np.arange(1, nsims + 1), tempbetas9[0] * np.arange(
+    1, nsims + 1) + tempbetas9[1], linewidth=3)
+ax1 = plt.gca()
+ax1.set_xticks(converttoindex)
+ax1.set_xticklabels(percentcontam)
+plt.xlim([1, 30])
+plt.ylim([0.5, 1.5])
+plt.title('Changing slopes of real NDT versus 10th percentile after 350 ms cutoffs', fontsize=16)
+plt.xlabel('Percentage of contaminant trials (%)', fontsize=16)
+plt.ylabel('Beta value', fontsize=16)
+
 changingbetas = dict()
 changingbetas['percentilebetas'] = betas[:, 0]
 changingbetas['posteriorbetas'] = betas[:, 1]
+changingbetas['posteriorbetaslapse350'] = betas[:, 2]
+changingbetas['posteriorbetaslapse'] = betas[:, 3]
+changingbetas['percentilebetas_cutoffs'] = betas[:, 4]
 changingbetas['converttoindex'] = converttoindex
 changingbetas['percentcontam'] = percentcontam
 sio.savemat('recovery_changingbetas.mat', changingbetas)

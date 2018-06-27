@@ -1,6 +1,6 @@
-# pdm5b_simultest2.py - Testing JAGS fits of Hierarchical Diffusion Models with
+# pdm5b_simultest3.py - Testing JAGS fits of Hierarchical Diffusion Models with
 #         trial-to-trial variability in non-decision time and drift,
-#         fit lapse trials
+#         fit lapse trials, no cutoffs
 #
 # Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
 #
@@ -21,11 +21,8 @@
 #
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
-# 06/11/18      Michael Nunez              Converted from pdm5b_simultest.py
-# 06/12/18       "               Remove negative initial non-decision values
-#                                           Use very small cutoff
-# 06/13/18       Michael Nunez       Always initialize non-decision time far below the minimum RT
-# 06/15/18       Michael Nunez             Reintroduce 350 ms cutoff
+# 06/18/18      Michael Nunez              Converted from pdm5b_simultest2.py
+#                                             Do not use an RT cutoff
 
 # Notes
 # To install Pyjags from github on Anaconda:
@@ -211,7 +208,7 @@ trackvars = ['tersubsd', 'deltasubsd', 'alphasubsd',
 
 for n in range(0, nsims):
     #Initialize vectors
-    N = np.sum(genparam['rt'][n, :, :] > .35) #Use 350 ms cutoff
+    N = np.sum(genparam['rt'][n, :, :] > .01) #Use 1 ms cutoff
     subject = np.zeros(N)
     rt = np.zeros(N)
     acc = np.zeros(N)
@@ -223,7 +220,7 @@ for n in range(0, nsims):
     for s in range(1, nsubs + 1):
         # Use only very small cutoff when fitting a mixture model
         # "Invalid parent" error occurs without this cutoff
-        whereindx = np.where(genparam['rt'][n, s - 1, :] > .35) #Use 350 ms cutoff
+        whereindx = np.where(genparam['rt'][n, s - 1, :] > .01) #Use 1 ms cutoff
         subn = whereindx[0].shape[0]
         subject[indextrack:(indextrack+subn)] = np.ones(subn) * s
         rt[indextrack:(indextrack+subn)] = genparam['rt'][n, s - 1, whereindx]
@@ -256,6 +253,6 @@ for n in range(0, nsims):
                             chains=nchains, adapt=burnin, threads=6,
                             progress_bar=True)
     samples = threaded.sample(nsamps, vars=trackvars, thin=10)
-    savestring = ('modelfits/trialparam2_test_model%i.mat') % (n + 1)
+    savestring = ('modelfits/trialparam3_test_model%i.mat') % (n + 1)
     print 'Saving results to: \n %s' % savestring
     sio.savemat(savestring, samples)

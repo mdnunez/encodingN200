@@ -2,11 +2,11 @@
 
 ### Citation
 
-Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (preprint).
+Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2018).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/04/19/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200  
-#### (Repository version 0.3.0)
+#### (Repository version 0.4.0)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -57,7 +57,7 @@ encodingN200 is licensed under the GNU General Public License v3.0 and written b
 
 ### Further Reading
 
-Lui, K. K., Nunez, M. D., Cassidy, J. M., Vandekerckhove, J., Cramer, S. C., & Srinivasan, R. (preprint).
+Lui, K. K., Nunez, M. D., Cassidy, J. M., Vandekerckhove, J., Cramer, S. C., & Srinivasan, R. (2018).
 [Timing of readiness potentials reflect a decision-making process in the human brain.](https://www.biorxiv.org/content/early/2018/06/04/338806) bioRxiv. doi: 10.1101/338806
 
 Nunez, M. D., Vandekerckhove, J., & Srinivasan, R. (2017).

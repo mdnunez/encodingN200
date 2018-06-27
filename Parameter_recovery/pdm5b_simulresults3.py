@@ -1,4 +1,4 @@
-# pdm5b_simulresults2.py - Evaluates simulation results of fitting
+# pdm5b_simulresults3.py - Evaluates simulation results of fitting
 #                         models with trial-to-trial variability
 #                         in non-decision time and drift-rate
 #
@@ -22,7 +22,7 @@
 #
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
-# 06/12/18      Michael Nunez           Converted from pdm5b_simulresults.py
+# 06/20/18      Michael Nunez           Converted from pdm5b_simulresults2.py
 
 # Imports
 import numpy as np
@@ -160,12 +160,12 @@ genparam = sio.loadmat('genparam_test.mat')
 rtpercentiles = np.zeros((nsims, nsubs))
 for n in range(0, nsims):
     for s in range(0, nsubs):
-        # Use 350 ms cutoff
-        whereindx = np.where(genparam['rt'][n, s, :] > .35)
+        # Use no cutoff
+        whereindx = np.where(genparam['rt'][n, s, :] > .01)
         rtpercentiles[n, s] = np.percentile(
             genparam['rt'][n, s, whereindx], 10, axis=-1)
 
-linearmodel = 'modelfits/trialparam2_test_model%i.mat'
+linearmodel = 'modelfits/trialparam3_test_model%i.mat'
 
 diags = dict()
 samples = dict()
