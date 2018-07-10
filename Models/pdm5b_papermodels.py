@@ -25,6 +25,7 @@
 # 01/09/18      Michael Nunez                          Clear up language
 # 01/26/18      Michael Nunez                       Adding 'all_n200lat_random'
 # 06/13/18      Michael Nunez     Add model with properly accounted-for lapse trials
+# 07/09/18      Michael Nunez     Fix and add models with properly accounted-for lapse trials
 
 # ### JAGS Models
 jagsmodels = dict()
@@ -283,25 +284,25 @@ model {
 			}
 		}
 		
-		#Subject-level parameters
+		#EEGSession-level parameters
 		for (ses in 1:nses) {
-			#Subject-level residual non-decision time
+			#EEGSession-level residual non-decision time
 			tersub[k,ses] ~ dnorm(tercond[experiment[ses]+1,k], 
 				pow(tersubsd, -2))
 
-			#Subject-level residual drift rate
+			#EEGSession-level residual drift rate
 			deltasub[k,ses] ~ dnorm(deltacond[experiment[ses]+1,k], 
 				pow(deltasubsd, -2))
 
-			#Subject-level diffusion coefficient
+			#EEGSession-level diffusion coefficient
 			alphasub[k,ses] ~ dnorm(alphacond[experiment[ses]+1,k], 
 				pow(alphasubsd, -2))
 
-		    #Subject-level N200 latency
+		    #EEGSession-level N200 latency
 			n200sub[k,ses] ~ dnorm(n200cond[experiment[ses]+1,k], 
 				pow(n200subsd, -2))
 
-			#Subject-level effects of N200 latency on non-decision time, drift rate, and boundary separation
+			#EEGSession-level effects of single-trial N200 latency on non-decision time, drift rate, and boundary separation
 			for (f in 1:3) {
 				n1gammasub[f,k,ses] ~ dnorm(n1gammacond[f,experiment[ses]+1,k],
 					pow(n1gammasubsd[1,f],-2))
@@ -402,12 +403,117 @@ model {
 		}
 	}
 	##########
-	#Wiener likelihoods
+	# Wiener likelihoods
 	for (i in 1:N) {
-		y[i] ~ dwiener(alphasub[condition[i],EEGsession[i]],
-		tersub[condition[i],EEGsession[i]],
-		beta,
-		deltasub[condition[i],EEGsession[i]])
+        # Log density for DDM process
+        ld_comp[i, 1] <- dlogwiener(y[i],alphasub[condition[i],EEGsession[i]],
+        tersub[condition[i],EEGsession[i]],
+        beta,
+        deltasub[condition[i],EEGsession[i]])
+
+        # Log density for lapse trials (negative max RT to positive max RT)
+        ld_comp[i, 2] <- logdensity.unif(y[i], -maxrt[condition[i],EEGsession[i]], maxrt[condition[i],EEGsession[i]])
+
+        # Select one of these two densities (Mixture of nonlapse and lapse trials)
+        density[i] <- exp(ld_comp[i, component_chosen[i]] - Constant)
+		
+        # Generate a likelihood for the MCMC sampler using a trick to maximize density value
+        Ones[i] ~ dbern(density[i])
+
+        # Probability of mind wandering trials (lapse trials)
+        component_chosen[i] ~ dcat(probsub[condition[i],EEGsession[i],1:2])
+	}
+}
+'''
+
+# 3 Parameter Model with random effects of non-decision time on true N1 across EEGsessions, split by experiment, additive effect of noise
+#  Properly accounting for lapse trials
+jagsmodels['all_n1lat_request2_lapse'] = '''
+model {
+	##########
+	#Fixed Parameters
+	beta <- .5
+	##########
+	#Between-session variability in non-decision time
+	tersubsd ~ dgamma(.2,1)
+
+	#Between-session variability in drift
+	deltasubsd ~ dgamma(1,1)
+
+	#Between-session variability in boundary separation
+	alphasubsd ~ dgamma(1,1)
+
+	#Between-session variability in N1 latency
+	n1subsd ~ dgamma(.2,1)
+
+	##########
+	#Block-level parameters
+	##########
+
+	#Condition-level effects of N1 latency on non-decision time
+	for (f in 1:3) {
+		n1gammacond[f,1,3] ~ dnorm(1,pow(3,-2))
+		n1gammacond[f,2,3] ~ dnorm(0,pow(1,-2))
+		for (e in 1:nexps) {
+			for (k in 1:2) {
+				n1gammacond[f,e,k] ~ dnorm(0,pow(1,-2))
+			}
+		}
+	}
+
+	for (k in 1:nconds) {
+		for (e in 1:nexps) {
+			#Condition-level N1 latency
+			n1cond[e,k] ~ dnorm(.2, pow(.1,-2))
+
+	        #Condition-level non-decision time
+			tercond[e,k] ~ dnorm(.3, pow(.25,-2))
+
+			#Condition-level drift rate
+			deltacond[e,k] ~ dnorm(1, pow(2, -2))
+
+			#Condition-level boundary separation
+			alphacond[e,k] ~ dnorm(1, pow(.5,-2))
+
+		}
+		#EEGsession-level parameters
+		for (ses in 1:nses) {
+			#EEGsession-level non-decision time
+			tersub[k,ses] ~ dnorm(tercond[experiment[ses]+1,k]
+				+ n1gammacond[1,1,3]*n1sub[k,ses]
+				+ n1gammacond[1,1,2]*(k<3)*n1sub[k,ses]
+				+ n1gammacond[1,1,1]*(k<2)*n1sub[k,ses]
+				+ n1gammacond[1,2,3]*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[1,2,2]*(k<3)*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[1,2,1]*(k<2)*experiment[ses]*n1sub[k,ses],
+				pow(tersubsd, -2))T(0,1)
+
+			#EEGsession-level drift rate
+			deltasub[k,ses] ~ dnorm(deltacond[experiment[ses]+1,k]
+				+ n1gammacond[2,1,3]*n1sub[k,ses]
+				+ n1gammacond[2,1,2]*(k<3)*n1sub[k,ses]
+				+ n1gammacond[2,1,1]*(k<2)*n1sub[k,ses]
+				+ n1gammacond[2,2,3]*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[2,2,2]*(k<3)*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[2,2,1]*(k<2)*experiment[ses]*n1sub[k,ses],
+				pow(deltasubsd, -2))T(-9, 9)
+
+			#EEGsession-level boundary separation
+			alphasub[k,ses] ~ dnorm(alphacond[experiment[ses]+1,k]
+				+ n1gammacond[3,1,3]*n1sub[k,ses]
+				+ n1gammacond[3,1,2]*(k<3)*n1sub[k,ses]
+				+ n1gammacond[3,1,1]*(k<2)*n1sub[k,ses]
+				+ n1gammacond[3,2,1]*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[3,2,2]*(k<3)*experiment[ses]*n1sub[k,ses]
+				+ n1gammacond[3,2,3]*(k<2)*experiment[ses]*n1sub[k,ses],
+				pow(alphasubsd, -2))T(.1,3)
+
+		    #EEGsession-level N1 latency
+			n1sub[k,ses] ~ dnorm(n1cond[experiment[ses]+1,k],pow(n1subsd, -2))
+
+			#EEGsession-level lapse trials
+        	probsub[k, ses, 1:2] ~ ddirch(c(1,1))
+		}
 	}
 	##########
 	# Wiener likelihoods
@@ -417,6 +523,124 @@ model {
         tersub[condition[i],EEGsession[i]],
         beta,
         deltasub[condition[i],EEGsession[i]])
+
+        # Log density for lapse trials (negative max RT to positive max RT)
+        ld_comp[i, 2] <- logdensity.unif(y[i], -maxrt[condition[i],EEGsession[i]], maxrt[condition[i],EEGsession[i]])
+
+        # Select one of these two densities (Mixture of nonlapse and lapse trials)
+        density[i] <- exp(ld_comp[i, component_chosen[i]] - Constant)
+		
+        # Generate a likelihood for the MCMC sampler using a trick to maximize density value
+        Ones[i] ~ dbern(density[i])
+
+        # Probability of mind wandering trials (lapse trials)
+        component_chosen[i] ~ dcat(probsub[condition[i],EEGsession[i],1:2])
+	}
+}
+'''
+
+# Random effects of single-trial N200 latency on all parameters, split by experiment
+#  Properly accounting for lapse trials
+jagsmodels['all_n200lat_random'] = '''
+model {
+	##########
+	#Fixed Parameters
+	beta <- .5
+	##########
+	#Between-subject variability in residual non-decision time
+	tersubsd ~ dgamma(.2,1)
+
+	#Between-subject variability in drift
+	deltasubsd ~ dgamma(1,1)
+
+	#Between-subject variability in log() boundary separation
+	alphasubsd ~ dgamma(1,1)
+
+	#Between-subject variability in N200 latency
+	n200subsd ~ dgamma(.2,1)
+
+	#Between-trial variability in N200 latency
+	n200trialsd ~ dgamma(.2,1)
+
+	for (f in 1:3) {
+
+		#Hierarchical-level effect of N200 latency
+		n1gammault[1,f] ~ dnorm(1,pow(3,-2)) #'Informative' prior
+
+		#Between-condition variability in effect of N200 latency
+		n1gammasd[1,f] ~ dgamma(1,1)
+
+		#Between-subject variability in N200 effect
+		n1gammasubsd[1,f] ~ dgamma(1,1)
+	}
+
+	##########
+	#Block-level parameters
+	##########
+	for (k in 1:nconds) {
+		for (e in 1:nexps) {
+			#Condition-level N200 latency
+			n200cond[e,k] ~ dnorm(.2, pow(.1,-2))
+
+	        #Condition-level residual non-decision time
+			tercond[e,k] ~ dnorm(.3, pow(.25,-2))
+
+			#Condition-level residual drift rate
+			deltacond[e,k] ~ dnorm(1, pow(2, -2))
+
+			#Condition-level residual log() boundary separation
+			alphacond[e,k] ~ dnorm(0, pow(.7,-2))
+
+			#Condition-level effects of N200 latency on non-decision time, drift rate, and boundary separation
+			for (f in 1:3) {
+				n1gammacond[f,e,k] ~ dnorm(n1gammault[1,f],pow(n1gammasd[1,f],-2))
+			}
+		}
+		
+		#EEGSession-level parameters
+		for (ses in 1:nses) {
+			#EEGSession-level residual non-decision time
+			tersub[k,ses] ~ dnorm(tercond[experiment[ses]+1,k], 
+				pow(tersubsd, -2))
+
+			#EEGSession-level residual drift rate
+			deltasub[k,ses] ~ dnorm(deltacond[experiment[ses]+1,k], 
+				pow(deltasubsd, -2))
+
+			#EEGSession-level diffusion coefficient
+			alphasub[k,ses] ~ dnorm(alphacond[experiment[ses]+1,k], 
+				pow(alphasubsd, -2))
+
+		    #EEGSession-level N200 latency
+			n200sub[k,ses] ~ dnorm(n200cond[experiment[ses]+1,k], 
+				pow(n200subsd, -2))
+
+			#EEGsession-level lapse trials
+        	probsub[k, ses, 1:2] ~ ddirch(c(1,1))
+
+			#EEGSession-level effects of single-trial N200 latency on non-decision time, drift rate, and boundary separation
+			for (f in 1:3) {
+				n1gammasub[f,k,ses] ~ dnorm(n1gammacond[f,experiment[ses]+1,k],
+					pow(n1gammasubsd[1,f],-2))
+			}
+		}
+	}
+	##########
+	# Wiener likelihoods
+	for (i in 1:N) {
+		#Note that N200 latencies are censored between 150 and 274 ms
+		n200lat[i] ~ dnorm(n200sub[condition[i], EEGsession[i]],
+			pow(n200trialsd,-2))T(.151,.274)
+
+
+        # Log density for DDM process
+        ld_comp[i, 1] <- dlogwiener(y[i],exp(alphasub[condition[i],EEGsession[i]]
+		+ n1gammasub[3, condition[i], EEGsession[i]]*n200lat[i]),
+		tersub[condition[i],EEGsession[i]]
+		+ n1gammasub[1, condition[i],EEGsession[i]]*n200lat[i], 
+		beta, 
+		deltasub[condition[i],EEGsession[i]]
+		+ n1gammasub[2, condition[i],EEGsession[i]]*n200lat[i])
 
         # Log density for lapse trials (negative max RT to positive max RT)
         ld_comp[i, 2] <- logdensity.unif(y[i], -maxrt[condition[i],EEGsession[i]], maxrt[condition[i],EEGsession[i]])

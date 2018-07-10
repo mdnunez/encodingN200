@@ -72,14 +72,6 @@ model {
 		}
 	}
 	##########
-	#Wiener likelihoods
-	for (i in 1:N) {
-		y[i] ~ dwiener(alphasub[condition[i],EEGsession[i]],
-		tersub[condition[i],EEGsession[i]],
-		beta,
-		deltasub[condition[i],EEGsession[i]])
-	}
-	##########
 	# Wiener likelihoods
 	for (i in 1:N) {
         # Log density for DDM process

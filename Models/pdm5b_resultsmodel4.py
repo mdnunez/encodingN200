@@ -22,6 +22,7 @@
 # ====         ================                       ======================
 # 06/14/18       Michael Nunez              Converted from pdm5b_resultsmodel4.py
 # 06/15/18       Michael Nunez                     Results with cutoff data
+# 07/10/18       Michael Nunez                   Fixed model results
 
 #
 # Imports
@@ -183,7 +184,7 @@ def diagnostic(insamples):
 
 
 # Plot figures
-jagsmodel = 'jagsmodel_all_n1lat_random_lapseJun_14_18_11_40.mat'
+jagsmodel = 'jagsmodel_all_n1lat_random_lapseJul_09_18_11_50.mat'
 fontsize = 18
 
 samples = sio.loadmat(jagsmodel)

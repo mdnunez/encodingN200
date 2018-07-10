@@ -21,6 +21,7 @@
 #  01/26/18        Michael Nunez                 Original code
 #  01/29/18        Michael Nunez                 Remove title
 #  06/18/18        Michael Nunez           Inclusion of lapse trials
+#  07/09/18        Michael Nunez            Fixed model results
 
 ## Necessary packages
 library(ggplot2)
@@ -34,7 +35,7 @@ loadloc = '../Models'
 
 # Read in the reaction times
 samples = readMat(paste(loadloc,
-  '/jagsmodel_all_n1lat_random_lapseJun_14_18_11_40.mat',sep=""))
+  '/jagsmodel_all_n1lat_random_lapseJul_09_18_11_50.mat',sep=""))
 
 mainN200effect = as.vector(samples[1]$n1gammault[1,1,,])
 print(sprintf('Length of N200 effect posterior samples is %d',length(mainN200effect)))
