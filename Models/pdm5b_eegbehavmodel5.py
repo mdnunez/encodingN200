@@ -1,5 +1,5 @@
 # pdm5b_eegbehavmodel5.py - Creates models for training data of all subjects
-#                         with subject-level N1 latencies, lapse trials explicitly modeled
+#                         with trial-by-trial N200 latencies, lapse trials explicitly modeled
 #
 #
 # Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
@@ -35,7 +35,7 @@ import os
 from pdm5b_papermodels import *
 
 # Set up reaction time data
-trialdata = np.genfromtxt('../Data/N200_rt_window_150_275_fixed350cutoff.csv', delimiter=',')
+trialdata = np.genfromtxt('../Data/N200_rt_window_150_275.csv', delimiter=',')
 
 y = (trialdata[:, 2]/1000. ) * (trialdata[:, 3] * 2 - 1)
 condition = np.array(trialdata[: , 4], 'int')
@@ -49,38 +49,7 @@ experiment = experiment[expindex] - 1 # Index experiment by session and convert 
 nses = np.unique(sessioncount).shape[0]
 N = y.shape[0]
 
-# Set up N1 latency matrix
-sesdata = np.genfromtxt('../Data/N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv', delimiter=',')
-
-# Set up N1 latency matrix
-n1lat = sesdata[:, 0]
-n1onset= sesdata[:, 1]
-n1mag = sesdata[:, 2]
-conds = np.array(sesdata[:, 3], dtype='int')
-conds += 1
-_, sescount = np.unique(sesdata[:, 4], return_inverse=True) # Unique EEG session index
-sescount = sescount + 1
-exp = np.array(sesdata[:, 5], dtype='int')
-trueses = np.array(sesdata[:, 6], dtype='int')
-
-n1deflec = np.empty((nconds, nses))
-n1sub = np.empty((nconds, nses))
-condmat = np.empty((nconds, nses))
-submat = np.empty((nconds, nses))
-n1sub[:] = np.NAN
-n1deflec[:] = np.NAN
-condmat[:] = np.NAN
-submat[:] = np.NAN
-for n in range(0, n1lat.shape[0]):
-    n1sub[conds[n] - 1, sescount[n] - 1] = n1lat[n]
-    n1deflec[conds[n] - 1, sescount[n] - 1] = n1onset[n]
-    condmat[conds[n] - 1, sescount[n] - 1] = conds[n]
-    submat[conds[n] - 1, sescount[n] - 1] = sescount[n]
-n1deflec /= 1000 #Convert from ms to seconds
-n1deflec = ma.masked_invalid(n1deflec)  # Remove NANs for pyjags
-n1sub /= 1000 #Convert from ms to seconds
-n1sub = ma.masked_invalid(n1sub)  # Remove NANs for pyjags
-
+n200lat = trialdata[:, 0]/1000. #convert from ms to seconds
 
 # Initialize non-decision time with mininum RT for each subject and condition
 # Use maximum RT for the bounds on the lapse process, modeled by a uniform distribution
@@ -109,28 +78,34 @@ nchains = 6
 burnin = 2000  # Note that scientific notation breaks pyjags
 nsamps = 50000
 
+# Track these variables
+trackvars = ['n1gammasub', 'n200sub', 'alphasub', 'deltasub', 'tersub',
+             'n1gammacond', 'n200cond', 'alphacond', 'deltacond', 'tercond',
+             'n1gammasubsd', 'n200subsd', 'alphasubsd', 'deltasubsd', 'tersubsd',
+             'n200trialsd', 'n1gammault', 'n1gammasd', 'probsub']
 
-trackvars = ['alphasub', 'deltasub', 'tersub', 'n1sub',
-             'n1gammacond', 'n1cond', 'alphacond', 'deltacond', 'tercond',
-             'n1subsd', 'alphasubsd', 'deltasubsd', 'tersubsd',
-             'n1gammasd', 'probsub']
 
 initials = []
 for c in range(0, nchains):
     chaininit = {
+        'n1gammasub': np.zeros((3, nconds, nses)),
+        'n200sub': np.random.uniform(.16, .273, size=(nconds, nses)),
         'alphasub': np.random.uniform(.5, 2., size=(nconds, nses)),
         'deltasub': np.random.uniform(-4., 4., size=(nconds, nses)),
         'tersub': np.random.uniform(0., .3, size=(nconds, nses)),
         'n1gammacond': np.random.uniform(-2., 2., size=(3, 2, nconds)),
-        'n1gammasd': np.random.uniform(.01, 3., size=(1,3)),
-        'n1cond': np.random.uniform(.16, .273, size=(2, nconds)),
+        'n200cond': np.random.uniform(.16, .273, size=(2, nconds)),
         'alphacond': np.random.uniform(.5, 2., size=(2, nconds)),
         'deltacond': np.random.uniform(-4., 4., size=(2, nconds)),
         'tercond': np.random.uniform(0., .3, size=(2, nconds)),
-        'n1subsd': np.random.uniform(.01, .1),
+        'n1gammasubsd': np.random.uniform(.01, 1., size=(1, 3)),
+        'n200subsd': np.random.uniform(.01, .1),
         'alphasubsd': np.random.uniform(.01, 1.),
         'deltasubsd': np.random.uniform(.01, 3.),
-        'tersubsd': np.random.uniform(.01, .1)
+        'tersubsd': np.random.uniform(.01, .1),
+        'n200trialsd': np.random.uniform(.01, .1),
+        'n1gammasd': np.random.uniform(.01, 3., size=(1, 3)),
+        'n1gammault': np.random.uniform(-2., 2., size=(1, 3))
     }
     for k in range(0, nconds):
         for j in range(0, nses):
@@ -140,7 +115,7 @@ for c in range(0, nchains):
 # Run JAGS model
 
 # Choose JAGS model type
-modelname = 'all_n1lat_request2_lapse'
+modelname = 'all_n200lat_random_lapse'
 
 thismodel = jagsmodels[modelname]
 
@@ -154,9 +129,10 @@ f.close()
 print 'Fitting model %s ...' % (modelname + timestart)
 
 
-indata = dict(N=N, y=y, nses=nses, nconds=nconds, maxrt=maxrt, Ones=Ones, Constant=Constant,
+indata = data=dict(N=N, y=y, nses=nses, nconds=nconds, maxrt=maxrt, Ones=Ones, Constant=Constant,
                                   EEGsession=sessioncount, condition=condition,
-                                  n1sub=n1sub, experiment=experiment, nexps=2)
+                                  n200lat=n200lat,  experiment=experiment,
+                                  nexps=2)
 
 threaded = pyjags.Model(file=modelfile, init=initials,
                         data=indata,

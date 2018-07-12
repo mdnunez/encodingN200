@@ -25,6 +25,8 @@
 # 06/14/18      Michael Nunez      This model still obviously misestimates NDT
 #                                  in the presence of many fast lapse trials
 #                                      Use cutoff data
+# 07/10/18      Michael Nunez        Model was incorrectly written in pdm5b_simplemodels.m
+#                                       Use data without cutoffs
 
 # Imports
 from __future__ import division
@@ -38,7 +40,8 @@ import os
 from pdm5b_papermodels import *
 
 # Set up reaction time data
-trialdata = np.genfromtxt('../Data/N200_rt_window_150_275_fixed350cutoff.csv', delimiter=',')
+# trialdata = np.genfromtxt('../Data/N200_rt_window_150_275_fixed350cutoff.csv', delimiter=',')
+trialdata = np.genfromtxt('../Data/N200_rt_window_150_275.csv', delimiter=',')
 
 y = (trialdata[:, 2]/1000. ) * (trialdata[:, 3] * 2 - 1)
 condition = np.array(trialdata[: , 4], 'int')
@@ -53,7 +56,8 @@ nses = np.unique(sessioncount).shape[0]
 N = y.shape[0]
 
 # Set up N1 latency matrix
-sesdata = np.genfromtxt('../Data/N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv', delimiter=',')
+# sesdata = np.genfromtxt('../Data/N1deflec2_allSNR_window_150_275_fixed350cutoff.csv', delimiter=',')
+sesdata = np.genfromtxt('../Data/N1deflec2_allSNR_window_150_275.csv', delimiter=',')
 
 # Set up N1 latency matrix
 n1lat = sesdata[:, 0]

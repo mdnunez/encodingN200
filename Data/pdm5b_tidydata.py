@@ -25,6 +25,7 @@
 # 12/05/17      Michael Nunez                    Save single-trial data
 # 01/05/18      Michael Nunez            Add accuracy export to summary data
 # 01/09/18      Michael Nunez             Language clarification
+# 06/13/18      Michael Nunez               Remove 350 millisecond cutoff
 
 
 # Imports
@@ -82,7 +83,7 @@ for n in range(0, n1indx.shape[0]):
         thosetrials, np.where(np.isfinite(data['rt'])))
     thosetrials = np.intersect1d(thosetrials, np.where(data['rt'] > 0))
     # Use fixed cutoff
-    cutoffs[n] = 350
+    cutoffs[n] = 0
     thesetrials = np.intersect1d(
         thosetrials, np.where(data['rt'] > cutoffs[n]))
     perrmed[n] = (1 - thesetrials.shape[0] /
@@ -106,7 +107,7 @@ N1rtdata = np.vstack((n1lat[n1indx], n1deflec[n1indx], n1amp[n1indx], conds[n1in
 # See JASP for GUI analysis program: https://jasp-stats.org/
 
 np.savetxt(
-    'N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv',    # file name
+    'N1deflec2_allSNR_window_150_275.csv',    # file name
     N1rtdata,               # array to save
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter
@@ -129,7 +130,7 @@ ses = data['session'][alltrials]
 EEGses = EEGses[alltrials]
 
 # Remove bad data
-keeptrials = (n200lat != np.min(n200lat)) & (n200lat != np.max(n200lat)) & np.isfinite(n200lat) & np.isfinite(rt) & (rt > 350)
+keeptrials = (n200lat != np.min(n200lat)) & (n200lat != np.max(n200lat)) & np.isfinite(n200lat) & np.isfinite(rt) & (rt > 0)
 n200lat = n200lat[keeptrials]
 rt = rt[keeptrials]
 acc = acc[keeptrials]
@@ -145,7 +146,7 @@ EEGses = EEGses[keeptrials]
 N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses, exps, ses, truesubs)).T
 
 np.savetxt(
-    'N200_rt_window_150_275_fixed350cutoff.csv',    # file name
+    'N200_rt_window_150_275.csv',    # file name
     N200rtdata,               # array to save
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter

@@ -20,6 +20,7 @@
 %   Date           Programmers               Description of change
 %   ====        =================            =====================
 %  01/09/18        Michael Nunez                Original code
+%  07/12/18        Michael Nunez           Run models on data without RT cutoffs
 
 %% Initial
 singletrial = readtable('../Data/N200_rt_window_150_275_fixed350cutoff.csv');
