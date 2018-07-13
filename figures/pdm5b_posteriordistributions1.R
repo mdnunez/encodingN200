@@ -21,7 +21,7 @@
 #  01/26/18        Michael Nunez                 Original code
 #  01/29/18        Michael Nunez                 Remove title
 #  06/18/18        Michael Nunez           Inclusion of lapse trials
-#  07/09/18        Michael Nunez            Fixed model results
+#  07/11/18        Michael Nunez            Fixed model results
 
 ## Necessary packages
 library(ggplot2)
@@ -35,7 +35,7 @@ loadloc = '../Models'
 
 # Read in the reaction times
 samples = readMat(paste(loadloc,
-  '/jagsmodel_all_n1lat_random_lapseJul_09_18_11_50.mat',sep=""))
+  '/jagsmodel_all_n1lat_random_lapseJul_11_18_10_26.mat',sep=""))
 
 mainN200effect = as.vector(samples[1]$n1gammault[1,1,,])
 print(sprintf('Length of N200 effect posterior samples is %d',length(mainN200effect)))
@@ -74,7 +74,7 @@ cbbPalette <- c("#000000",  "#E6AB02", "#66A61E", "#E7298A", "#D95F02", "#1B9E77
 ## Plot
 png(paste('Model1_N200effects.png',sep=""),units="in",width=10,height=10,res=300)
 plot1 = ggplot(N200effects,aes(x=Effect,y=Condition,fill=Condition)) +
-  geom_joy(scale=3, alpha=.67) + xlim(-3,3) + 
+  geom_joy(scale=3, alpha=.67) + xlim(-2,4) + 
   xlab('Effect of trial-averaged N200 latency on non-decision time \n (ms increase per ms increase in N200 latency)') +
   ylab('') +
   # ggtitle('ERP latency effect posterior distributions') +
@@ -95,7 +95,7 @@ for (n in seq(1,7)) {
 	} else {
 		yplace = n - 0.5
 	}
-	plot1 = plot1 + annotate("text",x=2.5,y=yplace,label=sprintf('BF1: %3.2f',BF[n]),size=5,colour = 'blue')
+	plot1 = plot1 + annotate("text",x=3.5,y=yplace,label=sprintf('BF1: %3.2f',BF[n]),size=5,colour = 'blue')
 }
 plot(plot1)
 dev.off()

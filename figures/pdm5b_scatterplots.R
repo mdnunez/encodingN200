@@ -20,24 +20,31 @@
 #   ====        =================            =====================
 #  12/06/17        Michael Nunez                 Original code
 #  02/23/18        Michael Nunez          Addition of deflection time
+#  07/10/18        Michael Nunez          Adding  N200 peak-latency vs NDT
+#                                     Fix manual colors
+#  07/12/18        Michael Nunez           Use data without cutoffs
 
-## To do: Generate plotly, incorporate changes from grant materials
+## To do: Generate plotly
+
+## References:
+# http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3
 
 ## Necessary packages
 library(ggplot2)
-library(ggjoy)
+library(R.matlab)
 
 ## Code
+fontsize = 18;
 
-# Read the tables
+# Read the tables and samples
 trialdata = read.csv(
-  '../Data/N200_rt_window_150_275_fixed350cutoff.csv')
+  '../Data/N200_rt_window_150_275.csv')
 colnames(trialdata)
 for (i in seq(1,dim(trialdata)[1])) {
 	if (trialdata$Experiment[i] == 1) {
-		expstr = 'Exp1'
+		expstr = 'Exp. 1'
 	} else {
-		expstr = 'Exp2'
+		expstr = 'Exp. 2'
 	}
 	if (trialdata$SNR.condition[i] == 0) {
 		condstr = 'High'
@@ -46,18 +53,18 @@ for (i in seq(1,dim(trialdata)[1])) {
 	} else {
 		condstr = 'Low'
 	}
-	trialdata$NoiseCondition[i] = sprintf('%s%s',expstr,condstr)
+	trialdata$NoiseCondition[i] = sprintf('%s %s',expstr,condstr)
 }
-trialdata$NoiseCondition = factor(trialdata$NoiseCondition, levels = c("Exp1Low", "Exp1Med", "Exp1High","Exp2Low", "Exp2Med", "Exp2High"))
+trialdata$NoiseCondition = factor(trialdata$NoiseCondition, levels = c("Exp. 1 Low", "Exp. 1 Med", "Exp. 1 High","Exp. 2 Low", "Exp. 2 Med", "Exp. 2 High"))
 
 sesdata = read.csv(
-  '../Data/N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv')
+  '../Data/N1deflec2_allSNR_window_150_275.csv')
 colnames(sesdata)
 for (i in seq(1,dim(sesdata)[1])) {
 	if (sesdata$Experiment[i] == 1) {
-		expstr = 'Exp1'
+		expstr = 'Exp. 1'
 	} else {
-		expstr = 'Exp2'
+		expstr = 'Exp. 2'
 	}
 	if (sesdata$SNR.condition[i] == 0) {
 		condstr = 'High'
@@ -66,9 +73,19 @@ for (i in seq(1,dim(sesdata)[1])) {
 	} else {
 		condstr = 'Low'
 	}
-	sesdata$NoiseCondition[i] = sprintf('%s%s',expstr,condstr)
+	sesdata$NoiseCondition[i] = sprintf('%s %s',expstr,condstr)
 }
-sesdata$NoiseCondition = factor(sesdata$NoiseCondition, levels = c("Exp1Low", "Exp1Med", "Exp1High","Exp2Low", "Exp2Med", "Exp2High"))
+sesdata$NoiseCondition = factor(sesdata$NoiseCondition, levels = c("Exp. 1 Low", "Exp. 1 Med", "Exp. 1 High","Exp. 2 Low", "Exp. 2 Med", "Exp. 2 High"))
+
+samples = readMat('../Models/jagsmodel_all_n1lat_random_lapseJul_11_18_10_26.mat')
+sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter < 16]  = sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter < 16] +1
+sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter > 23]  = sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter > 23] -1
+sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter > 35]  = sesdata$EEG.Session.Counter[sesdata$EEG.Session.Counter > 35] -1
+for (n in 1:length(sesdata$EEG.Session.Counter)) {
+	sesdata$NDT[n] = median(samples$tersub[(sesdata$SNR.condition[n]+1),(sesdata$EEG.Session.Counter[n]),,])
+	}
+#Convert to milliseconds
+sesdata$NDT = sesdata$NDT*1000
 
 # Get linear model equation and R^2_adj as a string
 # SOURCE: http://goo.gl/K4yh
@@ -80,22 +97,25 @@ lm_eqn <- function(lmresults){
     as.character(as.expression(eq));                 
 }
 
-#Color-blind friendly palette (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette)
-cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=7
+cbbPalette <- c("#7570B3", "#1B9E77", "#D95F02", "#E7298A", "#66A61E", "#E6AB02")
+shapePalette <- c(21, 24, 22, 25, 23, 21)
+
 
 ## Plots
 lm1 = lm(X10th.RT.percentiles ~ X..N1.latencies,sesdata)
 png('n1_rt10per.png',units="in",width=10,height=10,res=300)
 plot1 = ggplot(sesdata,aes(x=X..N1.latencies, y=X10th.RT.percentiles)) +
-geom_point(aes(colour=NoiseCondition),size=3) +
+geom_point(aes(shape=NoiseCondition, fill=NoiseCondition),size=3) +
 geom_smooth(method="lm", colour='black',size=1.5) +
 xlim(150,275) + 
-coord_cartesian(ylim=c(400,1400)) +
-theme(axis.text=element_text(size=14),axis.title=element_text(size=14,face='bold'), legend.text = element_text(size=14),
-    legend.title=element_text(size=14,face='bold')) +
+coord_cartesian(ylim=c(400,900)) +
+theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
+    legend.title=element_text(size=fontsize,face='bold')) +
 labs(x='Trial-averaged N200 peak-latency (ms)',y='10th Reaction time percentiles (ms)',color='Noise\ncondition') +
-scale_fill_manual(palette = tail(cbbPalette,n=6)) + 
-geom_abline(slope=1,intercept=lm1$coefficients[1]+50,colour=cbbPalette[2],size=2, linetype=2)
+scale_fill_manual(values = cbbPalette) + 
+scale_shape_manual(values = shapePalette) + 
+geom_abline(slope=1,intercept=lm1$coefficients[1]+30,colour="#A6761D",size=2, linetype=2)
 # plot1 + geom_text(x = 200, y = 1200, label = lm_eqn(lm1), parse = TRUE,size=8)
 plot(plot1)
 dev.off()
@@ -104,15 +124,16 @@ dev.off()
 lm2 = lm(RT ~ X..Single.trial.N200.latencies,trialdata)
 png('n200_rt.png',units="in",width=10,height=10,res=300)
 plot2 = ggplot(trialdata,aes(x=X..Single.trial.N200.latencies, y=RT)) +
-geom_point(aes(colour=NoiseCondition)) +
+geom_point(aes(shape=NoiseCondition, fill=NoiseCondition)) +
 geom_smooth(method="lm", colour='black',size=1.5) +
 xlim(150,275) + 
 coord_cartesian(ylim=c(400,1400)) +
-theme(axis.text=element_text(size=14),axis.title=element_text(size=14,face='bold'), legend.text = element_text(size=14),
-    legend.title=element_text(size=14,face='bold')) +
+theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
+    legend.title=element_text(size=fontsize,face='bold')) +
 labs(x='Single-trial N200 peak-latency (ms)',y='Reaction time (ms)',color='Noise\ncondition') +
-scale_fill_manual(palette = tail(cbbPalette,n=6)) + 
-geom_abline(slope=1,intercept=lm2$coefficients[1]+10,colour=cbbPalette[2],size=2,linetype=2)
+scale_fill_manual(values = cbbPalette) + 
+scale_shape_manual(values = shapePalette) + 
+geom_abline(slope=1,intercept=lm2$coefficients[1]+10,colour="#A6761D",size=2,linetype=2)
 # plot2 + geom_text(x = 200, y = 1200, label = lm_eqn(lm2), parse = TRUE,size=8)
 plot(plot2)
 dev.off()
@@ -120,15 +141,33 @@ dev.off()
 lm3 = lm(X10th.RT.percentiles ~ N1.deflection,sesdata)
 png('n1deflec_rt10per.png',units="in",width=10,height=10,res=300)
 plot3 = ggplot(sesdata,aes(x=N1.deflection, y=X10th.RT.percentiles)) +
-geom_point(aes(colour=NoiseCondition),size=3) +
+geom_point(aes(shape=NoiseCondition, fill=NoiseCondition),size=3) +
 geom_smooth(method="lm", colour='black',size=1.5) +
 xlim(50,150) + 
-coord_cartesian(ylim=c(400,1400)) +
-theme(axis.text=element_text(size=14),axis.title=element_text(size=14,face='bold'), legend.text = element_text(size=14),
-    legend.title=element_text(size=14,face='bold')) +
+coord_cartesian(ylim=c(400,900)) +
+theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
+    legend.title=element_text(size=fontsize,face='bold')) +
 labs(x='Trial-averaged N200 deflection time (ms)',y='10th Reaction time percentiles (ms)',color='Noise\ncondition') +
-scale_fill_manual(palette = tail(cbbPalette,n=6)) + 
-geom_abline(slope=1,intercept=lm3$coefficients[1]-100,colour=cbbPalette[2],size=2, linetype=2)
+scale_fill_manual(values = cbbPalette) + 
+scale_shape_manual(values = shapePalette) + 
+geom_abline(slope=1,intercept=lm3$coefficients[1]-100,colour="#A6761D",size=2, linetype=2)
 # plot3 + geom_text(x = 200, y = 1200, label = lm_eqn(lm3), parse = TRUE,size=8)
 plot(plot3)
+dev.off()
+
+lm4 = lm(NDT ~ X..N1.latencies,sesdata)
+png('n1_NDT.png',units="in",width=10,height=10,res=300)
+plot4 = ggplot(sesdata,aes(x=X..N1.latencies, y=NDT)) +
+geom_point(aes(shape=NoiseCondition, fill=NoiseCondition),size=3) +
+geom_smooth(method="lm", colour='black',size=1.5) +
+xlim(150,275) + 
+coord_cartesian(ylim=c(300,700)) +
+theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
+    legend.title=element_text(size=fontsize,face='bold')) +
+labs(x='Trial-averaged N200 peak-latency (ms)',y='Non-decision time estimates (ms)',color='Noise\ncondition') +
+scale_fill_manual(values = cbbPalette) + 
+scale_shape_manual(values = shapePalette) + 
+geom_abline(slope=1,intercept=lm4$coefficients[1]+110,colour="#A6761D",size=2, linetype=2)
+# plot1 + geom_text(x = 200, y = 1200, label = lm_eqn(lm4), parse = TRUE,size=8)
+plot(plot4)
 dev.off()

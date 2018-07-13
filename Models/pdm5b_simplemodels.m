@@ -23,8 +23,8 @@
 %  07/12/18        Michael Nunez           Run models on data without RT cutoffs
 
 %% Initial
-singletrial = readtable('../Data/N200_rt_window_150_275_fixed350cutoff.csv');
-sesdata = readtable('../Data/N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv');
+singletrial = readtable('../Data/N200_rt_window_150_275.csv');
+sesdata = readtable('../Data/N1deflec2_allSNR_window_150_275.csv');
 
 
 %% JAGS code for simple linear regression
