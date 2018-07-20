@@ -25,6 +25,8 @@
 # 01/30/18      Michael Nunez              Converted from pdm5b_simulresults.py
 # 06/18/18      Michael Nunez             Addition of results with modeled lapse trials
 # 06/20/18      Michael Nunez           Addition of results without 350 ms cutoffs
+# 07/18/18      Michael Nunez           Plot parameter recovery for two other parameters
+
 
 # Imports
 import numpy as np
@@ -221,19 +223,19 @@ plt.plot(genparam['tersub'][0, :].T * 1000, genparam['tersub']
 plt.xlabel('Real non-decision time (ms)', fontsize=16)
 plt.ylabel('10th reaction time percentile (ms)', fontsize=16)
 plt.figure()
-recovery(samples[1]['tersub'][:] * 1000,
+recovery(samples3[1]['tersub'][:] * 1000,
          genparam['tersub'][0, :].T * 1000)
 plt.xlabel('Real non-decision time (ms)', fontsize=16)
 plt.ylabel('Non-decision time posteriors (ms)', fontsize=16)
 # Note that simuldiff() is on a different evidence scale since the
 # diffusion parameter is .1 and dwiener assumes the diffusion parameter =1
 plt.figure()
-recovery(samples[1]['deltasub'][:],
+recovery(samples3[1]['deltasub'][:],
          genparam['deltasub'][0, :].T * 10)
 plt.xlabel('Real evidence accumulation rate (evidence units)', fontsize=16)
 plt.ylabel('Evidence accumulation posteriors (evidence units)', fontsize=16)
 plt.figure()
-recovery(samples[1]['alphasub'][:],
+recovery(samples3[1]['alphasub'][:],
          genparam['alphasub'][0, :].T * 10)
 plt.xlabel('Real evidence boundaries (evidence units)', fontsize=16)
 plt.ylabel('Evidence boundary posteriors (evidence units)', fontsize=16)

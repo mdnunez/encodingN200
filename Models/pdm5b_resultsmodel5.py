@@ -1,4 +1,4 @@
-# pdm5b_resultsmodel3.py - Track model builds of model type 'all_n200lat_random'
+# pdm5b_resultsmodel5.py - Track model builds of model type 'all_n200lat_random'
 #
 #
 # Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
@@ -20,9 +20,8 @@
 #
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
-# 01/22/18       Michael Nunez              Converted from pdm5b_resultsmodel2.py
-# 01/24/18       Michael Nunez             Use np.nanmax for Rhat calculation
-# 01/30/18       Michael Nunez             Report credible intervals for hierarchical effects
+# 07/16/18       Michael Nunez              Converted from pdm5b_resultsmodel3.py
+
 #
 # Imports
 import os
@@ -183,7 +182,7 @@ def diagnostic(insamples):
 
 
 # Plot figures
-jagsmodel = 'jagsmodel_all_n200lat_randomJan_29_18_16_34.mat'
+jagsmodel = 'jagsmodel_all_n200lat_random_lapseJul_16_18_13_14.mat'
 fontsize = 18
 
 samples = sio.loadmat(jagsmodel)
