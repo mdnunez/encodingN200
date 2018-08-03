@@ -26,6 +26,7 @@
 # 01/05/18      Michael Nunez            Add accuracy export to summary data
 # 01/09/18      Michael Nunez             Language clarification
 # 06/13/18      Michael Nunez               Remove 350 millisecond cutoff
+# 08/03/18      Michael Nunez                  Export test data
 
 
 # Imports
@@ -127,7 +128,7 @@ conds = data['condition'][alltrials]
 truesubs = data['subject'][alltrials]
 exps = data['experiment'][alltrials]
 ses = data['session'][alltrials]
-EEGses = EEGses[alltrials]
+EEGses_train = EEGses[alltrials]
 
 # Remove bad data
 keeptrials = (n200lat != np.min(n200lat)) & (n200lat != np.max(n200lat)) & np.isfinite(n200lat) & np.isfinite(rt) & (rt > 0)
@@ -139,11 +140,11 @@ conds = conds[keeptrials]
 truesubs = truesubs[keeptrials]
 exps = exps[keeptrials]
 ses = ses[keeptrials]
-EEGses = EEGses[keeptrials]
+EEGses_train = EEGses_train[keeptrials]
 
 
 # Export data to JASP
-N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses, exps, ses, truesubs)).T
+N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses_train, exps, ses, truesubs)).T
 
 np.savetxt(
     'N200_rt_window_150_275.csv',    # file name
@@ -153,5 +154,47 @@ np.savetxt(
     newline='\n',           # new line character
     header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, True Subject Index'
 )      # file header
+
+
+
+# Save out single-trial test data
+testtrials = np.intersect1d(np.where(np.logical_not(
+    data['missing'])), np.where(np.logical_not(data['train'])))
+
+n200lat_test = data['n200lat'][testtrials]
+rt_test = data['rt'][testtrials]
+acc_test = data['correct'][testtrials]
+n200_test = data['n200'][testtrials]
+conds_test = data['condition'][testtrials]
+truesubs_test = data['subject'][testtrials]
+exps_test = data['experiment'][testtrials]
+ses_test = data['session'][testtrials]
+EEGses_test = EEGses[testtrials]
+
+# Remove bad data
+testkeep = (n200lat_test != np.min(n200lat)) & (n200lat_test != np.max(n200lat)) & np.isfinite(n200lat_test) & np.isfinite(rt_test) & (rt_test > 0)
+n200lat_test = n200lat_test[testkeep]
+rt_test = rt_test[testkeep]
+acc_test = acc_test[testkeep]
+n200_test = n200_test[testkeep]
+conds_test = conds_test[testkeep]
+truesubs_test = truesubs_test[testkeep]
+exps_test = exps_test[testkeep]
+ses_test = ses_test[testkeep]
+EEGses_test = EEGses_test[testkeep]
+
+
+# Export data to JASP
+N200rtdata_test = np.vstack((n200lat_test, n200_test, rt_test, acc_test, conds_test, EEGses_test, exps_test, ses_test, truesubs_test)).T
+
+np.savetxt(
+    'TEST_N200_rt_window_150_275.csv',    # file name
+    N200rtdata_test,               # array to save
+    fmt='%.4f',             # formatting, 4 digits in this case
+    delimiter=',',          # column delimiter
+    newline='\n',           # new line character
+    header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, True Subject Index'
+)      # file header
+
 
 

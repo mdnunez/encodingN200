@@ -22,6 +22,7 @@
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
 # 07/19/18      Michael Nunez            Converted from pdm5b_eegbehavmodel6.py
+# 08/01/18      Michael Nunez                       Use of better predictive model
 
 # Imports
 from __future__ import division
@@ -79,11 +80,11 @@ burnin = 2000  # Note that scientific notation breaks pyjags
 nsamps = 50000
 
 # Track these variables
-trackvars = ['rmrsub', 'vetsub', 'alphasub', 'deltasub', 'probsub', 'tersub',
+trackvars = ['rmrsub', 'vetsub', 'alphasub', 'deltasub', 'probsub',
             'rmrcond', 'vetcond', 'deltacond', 'alphacond',
              'rmrsubsd', 'vetsubsd', 'alphasubsd', 'deltasubsd', 'n200trialsd']
 
-
+#Note: initialize so that all probability is on the lapse trial process, this avoids the "invalid parent" errors from JAGS
 initials = []
 for c in range(0, nchains):
     chaininit = {
@@ -99,18 +100,19 @@ for c in range(0, nchains):
         'deltasubsd': np.random.uniform(.01, 3.),
         'rmrsubsd': np.random.uniform(.01, .1),
         'vetsubsd': np.random.uniform(.01, .1),
-        'n200trialsd': np.random.uniform(.01, .1)
+        'n200trialsd': np.random.uniform(.01, .1),
+        'probsub': np.stack((np.zeros((nconds,nses)),np.ones((nconds,nses))),axis=2)
     }
-    for k in range(0, nconds):
-        for j in range(0, nses):
-            chaininit['vetsub'][k, j] = np.random.uniform(0., minrt[k, j]/3)
-            chaininit['rmrsub'][k, j] = np.random.uniform(0., minrt[k, j]/3)
+    # for k in range(0, nconds):
+    #     for j in range(0, nses):
+    #         chaininit['vetsub'][k, j] = np.random.uniform(0., minrt[k, j]/3)
+    #         chaininit['rmrsub'][k, j] = np.random.uniform(0., minrt[k, j]/3)
     initials.append(chaininit)
 
 # Run JAGS model
 
 # Choose JAGS model type
-modelname = '4parameter_lapse'
+modelname = '4parameter_lapse_alt'
 
 thismodel = jagsmodels[modelname]
 

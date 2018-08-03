@@ -1,4 +1,4 @@
-# pdm5b_resultsmodel6.py - Track model builds of model type 'ter_n200lat_random_lapse'
+# pdm5b_resultsmodel7.py - Track model builds of model type '4parameter_lapse'
 #
 #
 # Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
@@ -20,7 +20,8 @@
 #
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
-# 07/19/18       Michael Nunez              Converted from pdm5b_resultsmodel3.py
+# 08/01/18       Michael Nunez              Converted from pdm5b_resultsmodel6.py
+# 08/03/18       Michael Nunez                 Results from alternate model
 
 #
 # Imports
@@ -182,77 +183,18 @@ def diagnostic(insamples):
 
 
 # Plot figures
-jagsmodel = 'jagsmodel_ter_n200lat_random_lapseJul_18_18_11_29.mat'
+jagsmodel = 'jagsmodel_4parameter_lapse_altAug_02_18_12_18.mat'
 fontsize = 18
 
 samples = sio.loadmat(jagsmodel)
 diags = diagnostic(samples)
 
 plt.figure()
-jellyfish(samples['n200cond'])
-plt.title('Condition-level N200 latencies', fontsize=fontsize)
-
-# Calculate Bayes Factors
-possamps = samples['n1gammacond']
-# Number of chains
-nchains = possamps.shape[-1]
-# Number of samples per chain
-nsamps = possamps.shape[-2]
-# Number of dimensions
-ndims = possamps.ndim - 2
-# Number of variables to plot
-nvars = np.prod(possamps.shape[0:-2])
-# Index of variables
-varindx = np.arange(nvars).reshape(possamps.shape[0:-2])
-# Reshape data
-alldata = np.reshape(possamps, (nvars, nchains, nsamps))
-alldata = np.reshape(alldata, (nvars, nchains * nsamps))
-
-axes1 = plt.figure().add_subplot(111)
-if (len(samples['n1gammacond'].shape) > 4):
-    jellyfish(samples['n1gammacond'][0])
-else:
-    jellyfish(samples['n1gammacond'])
-
-plt.plot([1, 1], [0, 7], 'r--', linewidth=2)
-plt.plot([0, 0], [0, 7], 'b--', linewidth=2)
-plt.xlim((-4,5))
-# plt.title('Condition-level N1 effects', fontsize=fontsize)
-yticks = axes1.get_yticks().tolist()
-yticks[0] = ''
-yticks[1] = 'High Noise 1'
-yticks[2] = 'Med. Noise 1'
-yticks[3] = 'Low  Noise 1'
-yticks[4] = 'High Noise 2'
-yticks[5] = 'Med. Noise 2'
-yticks[6] = 'Low  Noise 2'
-axes1.set_yticklabels(yticks)
-plt.xlabel(
-    'Effect of N200 latency on non-decision time (ms increase per ms increase in N200 latency)', fontsize=fontsize)
-axes1.tick_params(axis='both', which='major', labelsize=fontsize)
-# Calculate Bayes Factors using Savage-Dickey density ratio
-bf = dict()
-for k in range(0, 6):
-    kde = stats.gaussian_kde(alldata[k, :])
-    # Prior density of effect parameters
-    denom = stats.norm.pdf(1, loc=1, scale=3)
-    bf[k] = kde(1) / denom
-    plt.annotate('BF: %3.2f' % bf[k], (4.25, k + .95), fontsize=fontsize)
-    # Check kde0 integrates to one
-    # sum = 0
-    # for n in np.arange(-200, 200, .1):
-    #     sum = sum + kde(n)*.1
-    #
-    # (sum == 1)?
-fig = plt.gcf()
-fig.set_size_inches(20, 12)
-figManager = plt.get_current_fig_manager() #Maximize screen
-figManager.window.showMaximized()
-
-
+jellyfish(samples['vetcond'])
+plt.title('Condition-level visual encoding time', fontsize=fontsize)
 plt.figure()
-jellyfish(samples['tercond'])
-plt.title('Condition-level residual non-decision time', fontsize=fontsize)
+jellyfish(samples['rmrcond'])
+plt.title('Condition-level motor response time', fontsize=fontsize)
 plt.figure()
 jellyfish(samples['deltacond'])
 plt.title('Condition-level drift rate parameter', fontsize=fontsize)
@@ -261,8 +203,9 @@ jellyfish(samples['alphacond'])
 plt.title('Condition-level boundary separation', fontsize=fontsize)
 
 plt.figure()
-jellyfish(samples['n1gammasub'][0,:])
-plt.title('EEGSession-level effect of single-trial N200 latency in low noise', fontsize=fontsize)
+jellyfish(samples['probsub'][:,:,1,:,:])
+plt.title('Subject-level probability of lapse', fontsize=fontsize)
 
-percentiles1 = stats.scoreatpercentile(np.reshape(samples['n1gammault'],(nchains * nsamps)), (50, 2.5, 97.5))
-print 'The median of the posterior of the single-trial effect of N200 on non-decision time is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles1[0],percentiles1[1],percentiles1[2])
+plt.figure()
+jellyfish(samples['alphasub'][:,:,:,:])
+plt.title('Subject-level boundary separation', fontsize=fontsize)

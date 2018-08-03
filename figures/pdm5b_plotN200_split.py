@@ -22,6 +22,7 @@
 # 06/01/18     Michael Nunez               Coverted from pdm5b_plotN200.py
 # 06/15/18     Michael Nunez                      Data from both experiments
 # 06/18/18     Michael Nunez                    Plot deflection distributions
+# 08/02/18     Michael Nunez                        Use of data without cutoffs
 
 
 ## References:
@@ -60,7 +61,7 @@ dataout = np.load(loadloc + '.npz')
 
 # Set up EEG session data
 sesdata = np.genfromtxt(
-    '/home/michael/Dropbox/Research/PDM/encodingN200/Data/N1deflec2_cutoffs_allSNR_window_150_275_fixed350cutoff.csv', delimiter=',')
+    '/home/michael/Dropbox/Research/PDM/encodingN200/Data/N1deflec2_allSNR_window_150_275.csv', delimiter=',')
 
 n1lat = sesdata[:, 0]
 n1deflec = sesdata[:, 1]

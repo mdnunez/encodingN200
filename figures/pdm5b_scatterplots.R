@@ -112,7 +112,7 @@ xlim(150,275) +
 coord_cartesian(ylim=c(400,900)) +
 theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
     legend.title=element_text(size=fontsize,face='bold')) +
-labs(x='Trial-averaged N200 peak-latency (ms)',y='10th Reaction time percentiles (ms)',color='Noise\ncondition') +
+labs(x='Trial-averaged N200 peak-latency (ms)',y='NDT estimates: 10th RT percentiles (ms)',color='Noise\ncondition') +
 scale_fill_manual(values = cbbPalette) + 
 scale_shape_manual(values = shapePalette) + 
 geom_abline(slope=1,intercept=lm1$coefficients[1]+30,colour="#A6761D",size=2, linetype=2)
@@ -147,7 +147,7 @@ xlim(50,150) +
 coord_cartesian(ylim=c(400,900)) +
 theme(axis.text=element_text(size=fontsize),axis.title=element_text(size=fontsize,face='bold'), legend.text = element_text(size=fontsize),
     legend.title=element_text(size=fontsize,face='bold')) +
-labs(x='Trial-averaged N200 deflection time (ms)',y='10th Reaction time percentiles (ms)',color='Noise\ncondition') +
+labs(x='Trial-averaged N200 deflection time (ms)',y='NDT estimates: 10th RT percentiles (ms)',color='Noise\ncondition') +
 scale_fill_manual(values = cbbPalette) + 
 scale_shape_manual(values = shapePalette) + 
 geom_abline(slope=1,intercept=lm3$coefficients[1]-100,colour="#A6761D",size=2, linetype=2)
