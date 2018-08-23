@@ -23,11 +23,12 @@
 %  12/29/17        Michael Nunez          Updating new load locations
 %  02/27/18 	   Michael Nunez        Save out scalp Current Source Density
 %  04/13/18        Michael Nunez            Change percentage valid
+%  08/15/18        Michael Nunez    Plot three representative EEG sessions in 3D
+%  08/23/18        Michael Nunez      Obtain full spline-interpolated Laplacian time series 
 
 % To do:
 % 1) Create simulated dura surface
 % 2) Find labeled locations
-% 3) Create movie with network leadup to peak
 
 % %% Preliminary 
 
@@ -130,6 +131,31 @@ subplot(3,3,n);
 hortontopo(lapdata(randsamp(n),:),EGINN128,'channumbers',0,'drawelectrodes',0,...
 'chanfontsize',8,'cmap','jet','badchans',[129]);
 end
+
+fixedsamp = [93, 33, 90];
+fprintf('Plotting the a random sample of EEG topographies and Laplacians on a 3D scalp...\n');
+eegplot = figure;
+lapplot = figure;
+for n=1:3
+figure(eegplot);
+subplot(1,3,n);
+h = drawmesh(Scalp);
+plotscalp = scalpdata(fixedsamp(n),goodchan)*Electrode.directspline3D';
+setmesh(h,'interp',plotscalp);
+newmap = (bone + jet)/2;
+colormap(newmap);
+view(gca,0,0);
+
+figure(lapplot);
+subplot(1,3,n);
+h = drawmesh(Scalp);
+plotlap = lapdata(fixedsamp(n),1:128)*Electrode.spline3D';
+setmesh(h,'interp',plotlap);
+newmap = (bone + jet)/2;
+colormap(newmap);
+view(gca,0,0);
+end
+
 
 %% Average plots
 

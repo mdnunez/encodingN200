@@ -23,6 +23,7 @@
 #  06/18/18        Michael Nunez           Inclusion of lapse trials
 #  07/11/18        Michael Nunez            Fixed model results
 #  07/19/18        Michael Nunez          Plot non-decision intercept
+#  08/15/18        Michael Nunez            Clean up intercept plots
 
 ## Necessary packages
 library(ggplot2)
@@ -151,8 +152,6 @@ plot3 = ggplot(N200intercepts,aes(x=N200Lat,y=Condition,fill=Condition)) +
   xlab('Hierarchical Mean N200 peak latencies (ms)') +
   ylab('') +
   # ggtitle('ERP latency effect posterior distributions') +
-  annotate("segment", x=150, xend=150, y=1, yend=10, colour = 'black',size=2,alpha=.5) +
-  annotate("segment", x=275, xend=275, y=1, yend=10, colour = 'black',size=2,alpha=.5) +
   theme(text = element_text(size=20), legend.position="none") +
   scale_fill_manual(values = tail(cbbPalette,n=7)) +
   scale_y_discrete(labels=condlabs) +
