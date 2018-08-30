@@ -24,6 +24,7 @@
 # 06/15/18       Michael Nunez                     Results with cutoff data
 # 07/10/18       Michael Nunez                   Fixed model results
 # 07/11/18       Michael Nunez                     Results with cutoff data
+# 08/27/18       Michael Nunez                 Output non-decision time residuals
 
 #
 # Imports
@@ -331,3 +332,21 @@ print 'The median of the posterior of the effect of N200 on drift rate is %.3f, 
 
 percentiles3 = stats.scoreatpercentile(np.reshape(samples['n1gammault'][0,2,:],(nchains * nsamps)), (50, 2.5, 97.5))
 print 'The median of the posterior of the effect of N200 on boundary separation is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles3[0],percentiles3[1],percentiles3[2])
+
+percentiles4 = stats.scoreatpercentile(np.reshape(samples['tercond'][0,0,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.1 high contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles4[0],percentiles4[1],percentiles4[2])
+
+percentiles5 = stats.scoreatpercentile(np.reshape(samples['tercond'][0,1,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.1 med contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles5[0],percentiles5[1],percentiles5[2])
+
+percentiles6 = stats.scoreatpercentile(np.reshape(samples['tercond'][0,2,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.1 low contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles6[0],percentiles6[1],percentiles6[2])
+
+percentiles7 = stats.scoreatpercentile(np.reshape(samples['tercond'][1,0,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.2 high contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles7[0],percentiles7[1],percentiles7[2])
+
+percentiles8 = stats.scoreatpercentile(np.reshape(samples['tercond'][1,1,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.2 med contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles8[0],percentiles8[1],percentiles8[2])
+
+percentiles9 = stats.scoreatpercentile(np.reshape(samples['tercond'][1,2,:],(nchains * nsamps)), (50, 2.5, 97.5))
+print 'The median of the posterior of residual non-decision time in Exp.2 low contrast is %.3f, 95%% CI: [%.3f, %.3f]' % (percentiles9[0],percentiles9[1],percentiles9[2])
