@@ -52,7 +52,7 @@ ERPdata = sio.loadmat('ERPchanpos.mat')
 Lapdata = sio.loadmat('ERPLap.mat')
 timelocked = np.arange(-99,601)
 
-plotindex = 100
+plotindex = 101
 
 # Create two subplots that are stacked on top of each other
 

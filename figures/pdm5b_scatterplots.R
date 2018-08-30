@@ -1,6 +1,6 @@
 # pdm5b_scatterplots.R - Creates scatter plots of N200 latencies versus RT percentiles
 #
-# Copyright (C) 2017 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
