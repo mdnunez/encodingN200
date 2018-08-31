@@ -84,6 +84,7 @@ h  = fdesign.lowpass(Fpass, Fstop, Apass, Astop, sr);
 Hd = design(h, 'butter', 'MatchExactly', match);
 
 % Carry out the filtering
+% Note that the use of filtfilthd() is a better method
 data=filter(Hd,data);
 data=flipdim(data,1);
 data=filter(Hd,data);
