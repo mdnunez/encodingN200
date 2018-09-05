@@ -6,14 +6,14 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2018).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/04/19/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200  
-#### (Repository version 0.4.0)
+#### (Repository version 0.4.1)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
 
 ### Significance
 
-Encoding of a sensory stimulus is the first step in perceptual decision making. From these analyses we report evidence that human evoked potentials (EPs) around 200 milliseconds after stimulus presentation track the time of extrastriate cortical processing before visual evidence accumulation during decision making. These EP latencies vary across individuals and depend upon external visual noise. We present linear regressions, framed in the context of cognitive theory, to test 1-to-1 relationships between these EP latencies and reaction time distributions. Hierarchical Bayesian model-fitting was also used to relate these EPs to a specific cognitive parameter that tracks time related to visual encoding. This work adds to the growing literature that suggests that EEG records can track the onset of evidence accumulation.
+Encoding of a sensory stimulus is the first step in perceptual decision making. From these analyses we report evidence that human evoked potentials (EPs) around 200 milliseconds after stimulus presentation track the time of extrastriate cortical processing before visual evidence accumulation during decision making. These EP latencies vary across individuals and depend upon external visual noise. We present linear regressions, framed in the context of cognitive theory, to test slope-of-1 relationships between these EP latencies and response time distributions. Hierarchical Bayesian model-fitting was also used to relate these EPs to a specific cognitive parameter that tracks time related to visual encoding. This work adds to the growing literature that suggests that EEG records can track the onset of evidence accumulation.
 
 ### Hypothesis
 
