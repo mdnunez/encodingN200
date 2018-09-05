@@ -6,7 +6,7 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2018).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/04/19/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200  
-#### (Repository version 0.4.1)
+#### (Repository version 0.4.2)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -40,16 +40,6 @@ In this study, we directly tested the hypothesis that N200 latencies (EEG stimul
 The repository can be cloned with `git clone https://github.com/mdnunez/encodingN200.git`
 
 The repository can also be may download via the _Download zip_ button above.
-
-### Installation
-
-After downloading/unzipping the repository, users will need to add these functions to the MATLAB path. In MATLAB, add the repository to the PATH with
-
-```matlab
-%Set 'artloc' to full directory path
-emloc = 'C:\Users\MATLAB\encodingN200';
-addpath(genpath(emloc));
-```
 
 ### License
 
