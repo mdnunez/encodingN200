@@ -1,6 +1,6 @@
 # pdm5b_tidydata.py - Creates tidy data csv file
 #
-# Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 # 01/09/18      Michael Nunez             Language clarification
 # 06/13/18      Michael Nunez               Remove 350 millisecond cutoff
 # 08/03/18      Michael Nunez                  Export test data
+# 01/04/19      Michael Nunez          Export data after lowpass filtering with different parameters
 
 
 # Imports
@@ -35,7 +36,8 @@ import pandas as pd
 import scipy.io as sio
 
 # Initial
-dataloc = '/home/michael/data10/michael/pdm/exp5data/jagsin/behav_strint7.npz'
+# dataloc = '/home/michael/data10/michael/pdm/exp5data/jagsin/behav_strint7.npz'
+dataloc = '/home/michael/data10/michael/pdm/exp5data/jagsin/behav_strint8.npz'
 
 # Code
 data = np.load(dataloc)
@@ -108,7 +110,7 @@ N1rtdata = np.vstack((n1lat[n1indx], n1deflec[n1indx], n1amp[n1indx], conds[n1in
 # See JASP for GUI analysis program: https://jasp-stats.org/
 
 np.savetxt(
-    'N1deflec2_allSNR_window_150_275.csv',    # file name
+    'N1deflec2_allSNR_window_150_275_lowpass30.csv',    # file name
     N1rtdata,               # array to save
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter
@@ -147,7 +149,7 @@ EEGses_train = EEGses_train[keeptrials]
 N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses_train, exps, ses, truesubs)).T
 
 np.savetxt(
-    'N200_rt_window_150_275.csv',    # file name
+    'N200_rt_window_150_275_lowpass30.csv',    # file name
     N200rtdata,               # array to save
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter
@@ -188,7 +190,7 @@ EEGses_test = EEGses_test[testkeep]
 N200rtdata_test = np.vstack((n200lat_test, n200_test, rt_test, acc_test, conds_test, EEGses_test, exps_test, ses_test, truesubs_test)).T
 
 np.savetxt(
-    'TEST_N200_rt_window_150_275.csv',    # file name
+    'TEST_N200_rt_window_150_275_lowpass30.csv',    # file name
     N200rtdata_test,               # array to save
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter

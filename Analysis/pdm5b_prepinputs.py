@@ -1,6 +1,6 @@
 # pdm5b_prepinputs.py - Creates data matrix for statistical models
 #
-# Copyright (C) 2017 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 # 12/01/17                             Change deflection detection window
 # 12/04/17                  Fix finddeflection output, use last found sample
 # 06/01/18                                Create index for N200 waveforms
+# 01/04/19      Michael Nunez          Export data after lowpass filtering with different parameters
 
 # Imports
 from __future__ import division
@@ -38,8 +39,10 @@ get_ipython().magic('pylab')
 # Initial
 dataloc = '/data10/michael/pdm/{1}/{0}/{0}_allcleaned.npz'
 indxloc = '/data10/michael/pdm/{1}/{0}/{0}_traintestindx.npz'
-svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
-saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
+# svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+# saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
+svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
+saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint8'
 
 # Definitions
 
