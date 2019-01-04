@@ -3,7 +3,7 @@
 #                   SVD decomposition per condition, less aggressive filtering
 #                   aggressive windowing, specific decomposition per condition
 #
-# Copyright (C) 2017 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
 # 11/20/17      Michael Nunez                        Converted from pdm5b_svdERP2.py
+# 01/03/19      Michael Nunez          Run lowpass filtering with different parameters
 
 # Imports
 import numpy as np
@@ -133,7 +134,8 @@ def epochsubset(data, newindex, lockindex=None):
 
 # Data save and load locations
 dataloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{0}_allcleaned.npz'
-svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+# svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
 indxloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{0}_traintestindx.npz'
 
 # Subjects
@@ -166,8 +168,10 @@ for subdes in subjects:
     sr = 1000.  # Make sure it is a floating point number
 
     print 'Filtering data for subject %s...' % (subdes)
+    # filtered = butterfilt(data['eeg'], sr, passband=(
+    #     1.0, 10.0), stopband=(0.25, 20.0))
     filtered = butterfilt(data['eeg'], sr, passband=(
-        1.0, 10.0), stopband=(0.25, 20.0))
+        1.0, 30.0), stopband=(0.25, 40.0))
     filtered2 = butterfilt(data['eeg'], sr, passband=(
         0.1, 4.0), stopband=(0.01, 8.0))
 
