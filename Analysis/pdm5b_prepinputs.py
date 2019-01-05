@@ -25,6 +25,8 @@
 # 12/04/17                  Fix finddeflection output, use last found sample
 # 06/01/18                                Create index for N200 waveforms
 # 01/04/19      Michael Nunez          Export data after lowpass filtering with different parameters
+#                                          Revert to original script
+
 
 # Imports
 from __future__ import division
@@ -39,10 +41,10 @@ get_ipython().magic('pylab')
 # Initial
 dataloc = '/data10/michael/pdm/{1}/{0}/{0}_allcleaned.npz'
 indxloc = '/data10/michael/pdm/{1}/{0}/{0}_traintestindx.npz'
-# svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
-# saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
-svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
-saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint8'
+svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
+# svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
+# saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint8'
 
 # Definitions
 

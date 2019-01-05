@@ -25,6 +25,8 @@
 # 11/20/17      Michael Nunez                        Converted from pdm5b_svdERP2.py
 # 01/03/19      Michael Nunez          Run lowpass filtering with different parameters
 # 01/04/19      Michael Nunez            Use attenuation parameter 5.0 dB for more accurate filter
+#                                          Revert to original script
+
 
 
 # Imports
@@ -136,8 +138,8 @@ def epochsubset(data, newindex, lockindex=None):
 
 # Data save and load locations
 dataloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{0}_allcleaned.npz'
-# svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
-svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
+svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+# svd_saveloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
 indxloc = '/data10/michael/pdm/exp5data/subjects/training/{0}/{0}_traintestindx.npz'
 
 # Subjects
@@ -170,10 +172,10 @@ for subdes in subjects:
     sr = 1000.  # Make sure it is a floating point number
 
     print 'Filtering data for subject %s...' % (subdes)
-    # filtered = butterfilt(data['eeg'], sr, passband=(
-    #     1.0, 10.0), stopband=(0.25, 20.0))
     filtered = butterfilt(data['eeg'], sr, passband=(
-        1.0, 30.0), stopband=(0.25, 40.0), attenuation=(1.0,5.0))
+        1.0, 10.0), stopband=(0.25, 20.0))
+    # filtered = butterfilt(data['eeg'], sr, passband=(
+    #     1.0, 30.0), stopband=(0.25, 40.0), attenuation=(1.0,5.0))
     filtered2 = butterfilt(data['eeg'], sr, passband=(
         0.1, 4.0), stopband=(0.01, 8.0))
 
