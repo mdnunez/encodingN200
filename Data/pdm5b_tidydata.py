@@ -1,6 +1,6 @@
 # pdm5b_tidydata.py - Creates tidy data csv file
 #
-# Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 # 01/09/18      Michael Nunez             Language clarification
 # 06/13/18      Michael Nunez               Remove 350 millisecond cutoff
 # 08/03/18      Michael Nunez                  Export test data
+# 01/09/19      Michael Nunez          Export percent of single-trials removed
 
 
 # Imports
@@ -132,6 +133,24 @@ EEGses_train = EEGses[alltrials]
 
 # Remove bad data
 keeptrials = (n200lat != np.min(n200lat)) & (n200lat != np.max(n200lat)) & np.isfinite(n200lat) & np.isfinite(rt) & (rt > 0)
+
+# Percent removed
+percent_removed = (float(np.shape(keeptrials)[0] - np.sum(keeptrials))/np.shape(keeptrials)[0])*100
+print '%.2f %% of trials removed' % percent_removed
+percent_removed_highExp1 = (float(np.shape(keeptrials[(conds==0) & (exps==1)])[0] - np.sum(keeptrials[(conds==0) & (exps==1)]))/np.shape(keeptrials[(conds==0) & (exps==1)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_highExp1
+percent_removed_medExp1 = (float(np.shape(keeptrials[(conds==1) & (exps==1)])[0] - np.sum(keeptrials[(conds==1) & (exps==1)]))/np.shape(keeptrials[(conds==1) & (exps==1)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_medExp1
+percent_removed_lowExp1 = (float(np.shape(keeptrials[(conds==2) & (exps==1)])[0] - np.sum(keeptrials[(conds==2) & (exps==1)]))/np.shape(keeptrials[(conds==2) & (exps==1)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_lowExp1
+percent_removed_highExp2 = (float(np.shape(keeptrials[(conds==0) & (exps==2)])[0] - np.sum(keeptrials[(conds==0) & (exps==2)]))/np.shape(keeptrials[(conds==0) & (exps==2)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_highExp2
+percent_removed_medExp2 = (float(np.shape(keeptrials[(conds==1) & (exps==2)])[0] - np.sum(keeptrials[(conds==1) & (exps==2)]))/np.shape(keeptrials[(conds==1) & (exps==2)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_medExp2
+percent_removed_lowExp2 = (float(np.shape(keeptrials[(conds==2) & (exps==2)])[0] - np.sum(keeptrials[(conds==2) & (exps==2)]))/np.shape(keeptrials[(conds==2) & (exps==2)])[0])*100
+print '%.2f %% of trials removed' % percent_removed_lowExp2
+
+# Remove bad data
 n200lat = n200lat[keeptrials]
 rt = rt[keeptrials]
 acc = acc[keeptrials]
@@ -141,6 +160,8 @@ truesubs = truesubs[keeptrials]
 exps = exps[keeptrials]
 ses = ses[keeptrials]
 EEGses_train = EEGses_train[keeptrials]
+
+
 
 
 # Export data to JASP

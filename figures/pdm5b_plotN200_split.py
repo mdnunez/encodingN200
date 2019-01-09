@@ -1,6 +1,6 @@
 # pdm5b_plotN200_split.py - Plots N200 waveforms split by experiment and condition
 #
-# Copyright (C) 2018 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 # 06/15/18     Michael Nunez                      Data from both experiments
 # 06/18/18     Michael Nunez                    Plot deflection distributions
 # 08/02/18     Michael Nunez                        Use of data without cutoffs
+# 01/08/19     Michael Nunez          Add stars to differentiate experiment 1 vs 2
 
 
 ## References:
@@ -76,7 +77,7 @@ accmean = sesdata[:, 17]
 
 # Plot all N200 waveforms in Experiment 2
 print 'Plotting the N200 data'
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(18, 9))
 for n in range(0,dataout['n1data'].shape[1]):
     if (np.min(dataout['n1data'][:,n]) != 0):
         plt.plot(np.arange(-100, 275), dataout['n1data'][:,n],color=colororder[int(dataout['n1dataexp'][n]) -1][int(dataout['n1datacond'][n])])
@@ -102,7 +103,11 @@ for e in range(1,3):
         x_lat = np.linspace(150, 275, 100)
         p_lat = kde_lat(x_lat)
         p_lat = .15 * p_lat / np.max(p_lat)
-        plt.fill_between(x_lat, p_lat, np.zeros((100)), color=colororder[e-1][n], alpha=0.5)
+        if e==1:
+            thishatch='0'
+        else:
+            thishatch='*'
+        plt.fill_between(x_lat, p_lat, np.zeros((100)), color=colororder[e-1][n], alpha=0.5,hatch=thishatch)
         p_lat[(p_lat < .001)] = np.nan
         plt.plot(x_lat, p_lat, color='k', alpha=0.25)
 
@@ -116,9 +121,9 @@ plt.xlabel('Time (ms) after Gabor onset', fontsize=fontsize)
 custom_lines = [Line2D([0], [0], color=color3, lw=4),
                 Line2D([0], [0], color=color2, lw=4),
                 Line2D([0], [0], color=color1, lw=4),
-                Line2D([0], [0], color=color6, lw=4),
-                Line2D([0], [0], color=color5, lw=4),
-                Line2D([0], [0], color=color4, lw=4)]
+                Line2D([0], [0], color=color6, lw=4, marker='*',markersize=12),
+                Line2D([0], [0], color=color5, lw=4, marker='*',markersize=12),
+                Line2D([0], [0], color=color4, lw=4, marker='*',markersize=12)]
 plt.legend(custom_lines, ['Exp. 1 Low Noise', 'Exp. 1 Med Noise', 'Exp. 1 High Noise',
     'Exp. 2 Low Noise', 'Exp. 2 Med Noise', 'Exp. 2 High Noise'],loc=2)
 
