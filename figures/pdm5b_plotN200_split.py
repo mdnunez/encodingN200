@@ -24,6 +24,7 @@
 # 06/18/18     Michael Nunez                    Plot deflection distributions
 # 08/02/18     Michael Nunez                        Use of data without cutoffs
 # 01/08/19     Michael Nunez          Add stars to differentiate experiment 1 vs 2
+# 01/22/19     Michael Nunez         Make texture more clear, add horizontal black line at zero
 
 
 ## References:
@@ -78,11 +79,13 @@ accmean = sesdata[:, 17]
 # Plot all N200 waveforms in Experiment 2
 print 'Plotting the N200 data'
 plt.figure(figsize=(18, 9))
+zeroline = plt.plot(np.array([0., 0.]), np.array([-.15, .15]))
+plt.setp(zeroline, linewidth=3, linestyle='--')
+xzeroline = plt.plot(np.array([-50., 275.]), np.array([0, 0]))
+plt.setp(xzeroline, linewidth=2,color='k')
 for n in range(0,dataout['n1data'].shape[1]):
     if (np.min(dataout['n1data'][:,n]) != 0):
         plt.plot(np.arange(-100, 275), dataout['n1data'][:,n],color=colororder[int(dataout['n1dataexp'][n]) -1][int(dataout['n1datacond'][n])])
-zeroline = plt.plot(np.array([0., 0.]), np.array([-.15, .15]))
-plt.setp(zeroline, linewidth=3, linestyle='--')
 plt.xlim(-50, 275)
 plt.ylim(-.15, .15)
 
@@ -91,7 +94,7 @@ kde_deflec = stats.gaussian_kde(n1deflec)
 x_deflec = np.linspace(0, 275, 100)
 p_deflec = kde_deflec(x_deflec)
 p_deflec = .15 * p_deflec / np.max(p_deflec)
-plt.fill_between(x_deflec, p_deflec, np.zeros((100)), color=color7, alpha=0.25)
+plt.fill_between(x_deflec, p_deflec, np.zeros((100)), color=color7, alpha=0.25,edgecolor='k')
 p_deflec[(p_deflec < .001)] = np.nan
 plt.plot(x_deflec, p_deflec, color='k', alpha=0.25)
 
@@ -107,7 +110,7 @@ for e in range(1,3):
             thishatch='0'
         else:
             thishatch='*'
-        plt.fill_between(x_lat, p_lat, np.zeros((100)), color=colororder[e-1][n], alpha=0.5,hatch=thishatch)
+        plt.fill_between(x_lat, p_lat, np.zeros((100)), color=colororder[e-1][n], alpha=0.5,hatch=thishatch,edgecolor='k')
         p_lat[(p_lat < .001)] = np.nan
         plt.plot(x_lat, p_lat, color='k', alpha=0.25)
 
