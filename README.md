@@ -6,7 +6,7 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2018).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://www.biorxiv.org/content/early/2018/09/05/275727) bioRxiv. doi: 10.1101/275727
 
 # encodingN200  
-#### (Repository version 0.5.0)
+#### (Repository version 0.5.1)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -17,7 +17,7 @@ Encoding of a sensory stimulus is the first step in perceptual decision making. 
 
 ### Hypothesis
 
-In this study, we directly tested the hypothesis that N200 latencies (EEG stimulus-locked negative peaks occurring between 150 and 275 milliseconds in female and male human subjects) reflect visual processing time that occurs before evidence accumulation, labeled visual encoding time (VET), in the context of cognitive theory. 
+In this study, we directly tested the hypothesis that N200 latencies (EEG stimulus-locked negative peaks occurring between 150 and 275 milliseconds in human subjects) reflect visual processing time that occurs before evidence accumulation during quick decision making.
 
 ### Prerequisites
 
