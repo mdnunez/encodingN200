@@ -9,7 +9,7 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2019).
 
 
 # encodingN200  
-#### (Repository version 0.5.3)
+#### (Repository version 0.5.4)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -60,4 +60,8 @@ Journal of Mathematical Psychology, 76, 117-130.
 Nunez, M. D., Srinivasan, R., & Vandekerckhove, J. (2015). 
 [Individual differences in attention influence perceptual decision making.](https://www.researchgate.net/publication/273466831_Individual_differences_in_attention_influence_perceptual_decision_making) 
 Frontiers in Psychology, 8.
+
+### Posterior samples
+
+Posterior samples for Models 1 and 2 from the paper can be found on [here.](https://figshare.com/articles/Posterior_samples_from_hierarchical_Models_1_and_2_for_the_study_associated_with_the_paper_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making_/8244746)
 
