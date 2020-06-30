@@ -3,13 +3,15 @@
 ### Citation
 
 Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2019).
-[The latency of a visual evoked potential tracks the onset of decision making.](https://www.researchgate.net/publication/332630466_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making) NeuroImage. doi: 10.1016/j.neuroimage.2019.04.052
+[The latency of a visual evoked potential tracks the onset of decision making.](https://sci-hub.tw/https://www.sciencedirect.com/science/article/pii/S1053811919303386) NeuroImage. doi: 10.1016/j.neuroimage.2019.04.052
+
+[Preprint](https://www.researchgate.net/publication/332630466_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making)
 
 [Elsevier source](https://www.sciencedirect.com/science/article/pii/S1053811919303386)
 
 
 # encodingN200  
-#### (Repository version 0.5.4)
+#### (Repository version 0.5.5)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
