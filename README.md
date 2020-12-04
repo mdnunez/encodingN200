@@ -3,7 +3,7 @@
 ### Citation
 
 Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2019).
-[The latency of a visual evoked potential tracks the onset of decision making.](https://sci-hub.tw/https://www.sciencedirect.com/science/article/pii/S1053811919303386) NeuroImage. doi: 10.1016/j.neuroimage.2019.04.052
+[The latency of a visual evoked potential tracks the onset of decision making.](https://sci-hub.st/https://www.sciencedirect.com/science/article/pii/S1053811919303386) NeuroImage. doi: 10.1016/j.neuroimage.2019.04.052
 
 [Preprint](https://www.researchgate.net/publication/332630466_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making)
 
@@ -11,7 +11,7 @@ Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2019).
 
 
 # encodingN200  
-#### (Repository version 0.5.5)
+#### (Repository version 0.5.6)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -30,15 +30,20 @@ In this study, we directly tested the hypothesis that N200 latencies (EEG stimul
 
 [MATLAB Repository: artscreenEEG](https://github.com/mdnunez/artscreenEEG)
 
+[R](https://www.r-project.org/) (for figures)
+
+[Python 2 and Scientific Python libraries](https://www.anaconda.com/products/individual)
+
+For these next install steps in Ubuntu, see jags_wiener_ubuntu.md in this repository.
+
 [MCMC Sampling Program: JAGS](http://mcmc-jags.sourceforge.net/)
 
 [Program: JAGS Wiener module](https://sourceforge.net/projects/jags-wiener/)
 
-[Scientific Python libraries](https://www.continuum.io/downloads)
-
-[Python Repository: pyjags](https://github.com/tmiasko/pyjags)
-
-[R](https://www.r-project.org/) (for figures)
+[Python Repository: pyjags](https://github.com/michaelnowotny/pyjags), can use pip:
+```bash
+pip install pyjags
+```
 
 ### Downloading
 
@@ -52,15 +57,15 @@ encodingN200 is licensed under the GNU General Public License v3.0 and written b
 
 ### Further Reading
 
-Lui, K. K., Nunez, M. D., Cassidy, J. M., Vandekerckhove, J., Cramer, S. C., & Srinivasan, R. (2018).
-[Timing of readiness potentials reflect a decision-making process in the human brain.](https://www.biorxiv.org/content/early/2018/06/04/338806) bioRxiv. doi: 10.1101/338806
+Lui, K. K., Nunez, M. D., Cassidy, J. M., Vandekerckhove, J., Cramer, S. C., & Srinivasan, R. (2020).
+[Timing of readiness potentials reflect a decision-making process in the human brain.](https://sci-hub.st/https://link.springer.com/article/10.1007/s42113-020-00097-5) Computational Brain & Behavior.
 
 Nunez, M. D., Vandekerckhove, J., & Srinivasan, R. (2017).
-[How attention influences perceptual decision making: Single-trial EEG correlates of drift-diffusion model parameters.](https://www.researchgate.net/publication/298275031_How_attention_influences_perceptual_decision_making_Single-trial_EEG_correlates_of_drift-diffusion_model_parameters)
+[How attention influences perceptual decision making: Single-trial EEG correlates of drift-diffusion model parameters.](https://sci-hub.st/https://www.sciencedirect.com/science/article/abs/pii/S0022249616000316)
 Journal of Mathematical Psychology, 76, 117-130.
 
 Nunez, M. D., Srinivasan, R., & Vandekerckhove, J. (2015). 
-[Individual differences in attention influence perceptual decision making.](https://www.researchgate.net/publication/273466831_Individual_differences_in_attention_influence_perceptual_decision_making) 
+[Individual differences in attention influence perceptual decision making.](https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00018/full) 
 Frontiers in Psychology, 8.
 
 ### Posterior samples
