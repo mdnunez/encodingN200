@@ -34,7 +34,7 @@ In this study, we directly tested the hypothesis that N200 latencies (EEG stimul
 
 [Python 2 and Scientific Python libraries](https://www.anaconda.com/products/individual)
 
-For these next install steps in Ubuntu, see jags_wiener_ubuntu.md in this repository.
+For these next 3 install steps in Ubuntu, see [directions here](https://github.com/mdnunez/pyhddmjags/blob/master/jags_wiener_ubuntu.md).
 
 [MCMC Sampling Program: JAGS](http://mcmc-jags.sourceforge.net/)
 
