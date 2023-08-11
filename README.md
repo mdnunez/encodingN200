@@ -5,13 +5,15 @@
 Nunez, M. D., Gosai, A., Vandekerckhove, J., & Srinivasan, R. (2019).
 [The latency of a visual evoked potential tracks the onset of decision making.](https://sci-hub.st/https://www.sciencedirect.com/science/article/pii/S1053811919303386) NeuroImage. doi: 10.1016/j.neuroimage.2019.04.052
 
-[Preprint](https://www.researchgate.net/publication/332630466_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making)
-
 [Elsevier source](https://www.sciencedirect.com/science/article/pii/S1053811919303386)
 
+[Preprint](https://www.researchgate.net/publication/332630466_The_latency_of_a_visual_evoked_potential_tracks_the_onset_of_decision_making)
+
+
+[Email Michael](mailto:m.d.nunez@uva.nl) if you cannot find a copy of the paper.
 
 # encodingN200  
-#### (Repository version 0.5.6)
+#### (Repository version 0.6.0)
 EEG measures of neural processing reflect visual encoding time (encodingN200) before evidence accumulation during human decision making
 
 **Authors: Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine**
@@ -34,6 +36,12 @@ In this study, we directly tested the hypothesis that N200 latencies (EEG stimul
 
 [Python 2 and Scientific Python libraries](https://www.anaconda.com/products/individual)
 
+Note that the Python scripts in this repository were written in Python 2.7 (before Python 2 was mostly replaced by Python 3 for scientific analysis). You may want to create a local environment to run Python 2.7. For example:
+```bash
+conda create -y -n N200 python=2.7
+conda activate N200
+```
+
 For these next 3 install steps in Ubuntu, see [directions here](https://github.com/mdnunez/pyhddmjags/blob/master/jags_wiener_ubuntu.md).
 
 [MCMC Sampling Program: JAGS](http://mcmc-jags.sourceforge.net/)
@@ -44,16 +52,19 @@ For these next 3 install steps in Ubuntu, see [directions here](https://github.c
 ```bash
 pip install pyjags
 ```
+Warning: Install pyjags on Python 2.7 may be difficult.
 
 ### Downloading
 
 The repository can be cloned with `git clone https://github.com/mdnunez/encodingN200.git`
 
-The repository can also be may download via the _Download zip_ button above.
+The repository can also be may download via the <>Code -> _Download zip_ button above.
 
 ### License
 
 encodingN200 is licensed under the GNU General Public License v3.0 and written by Michael D. Nunez, Aishwarya Gosai, Joachim Vandekerckhove, and Ramesh Srinivasan from the Cognitive Sciences Department at the University of California, Irvine.
+
+Minor updates were made by Michael D. Nunez at the University of Amsterdam, Psychological Methods in 2023.
 
 ### Further Reading
 

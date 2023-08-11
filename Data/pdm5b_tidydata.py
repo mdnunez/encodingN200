@@ -1,6 +1,6 @@
 # pdm5b_tidydata.py - Creates tidy data csv file
 #
-# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2023 Michael D. Nunez, <m.d.nunez@uva.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 # 06/13/18      Michael Nunez               Remove 350 millisecond cutoff
 # 08/03/18      Michael Nunez                  Export test data
 # 01/09/19      Michael Nunez          Export percent of single-trials removed
-
+# 11-Aug-2023   Michael Nunez         Extract spatial frequency information
 
 # Imports
 import numpy as np
@@ -36,7 +36,8 @@ import pandas as pd
 import scipy.io as sio
 
 # Initial
-dataloc = '/home/michael/data10/michael/pdm/exp5data/jagsin/behav_strint7.npz'
+dataloc = '/media/michael/My Book/data4/pdm/exp5data/jagsin/behav_strint9.npz'
+# dataloc = '/home/michael/data10/michael/pdm/exp5data/jagsin/behav_strint7.npz'
 
 # Code
 data = np.load(dataloc)
@@ -49,6 +50,7 @@ conds = data['condition']  # Condition index
 truesubs = data['subject']  # True subject index
 exps = data['experiment']  # Experiment (visual noise) type index
 ses = data['session']  # Run session index
+spfs = data['spfs']  # Spatial frequency displayed on this trial, 11-Aug-2023
 tempses = (exps - 1) * 2 + ses
 tempsubs = truesubs + .1 * tempses
 _, EEGses = np.unique(tempsubs, return_inverse=True)  # Unique EEG session index
@@ -129,6 +131,7 @@ conds = data['condition'][alltrials]
 truesubs = data['subject'][alltrials]
 exps = data['experiment'][alltrials]
 ses = data['session'][alltrials]
+spfs = data['spfs'][alltrials] # Added 11-Aug-2023
 EEGses_train = EEGses[alltrials]
 
 # Remove bad data
@@ -159,13 +162,14 @@ conds = conds[keeptrials]
 truesubs = truesubs[keeptrials]
 exps = exps[keeptrials]
 ses = ses[keeptrials]
+spfs = spfs[keeptrials] # Added 11-Aug-2023
 EEGses_train = EEGses_train[keeptrials]
 
 
 
 
 # Export data to JASP
-N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses_train, exps, ses, truesubs)).T
+N200rtdata = np.vstack((n200lat, n200, rt, acc, conds, EEGses_train, exps, ses, spfs, truesubs)).T
 
 np.savetxt(
     'N200_rt_window_150_275.csv',    # file name
@@ -173,7 +177,7 @@ np.savetxt(
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter
     newline='\n',           # new line character
-    header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, True Subject Index'
+    header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, Spatial Frequency, True Subject Index'
 )      # file header
 
 
@@ -190,6 +194,7 @@ conds_test = data['condition'][testtrials]
 truesubs_test = data['subject'][testtrials]
 exps_test = data['experiment'][testtrials]
 ses_test = data['session'][testtrials]
+spfs_test = data['spfs'][testtrials] # Added 11-Aug-2023
 EEGses_test = EEGses[testtrials]
 
 # Remove bad data
@@ -202,11 +207,12 @@ conds_test = conds_test[testkeep]
 truesubs_test = truesubs_test[testkeep]
 exps_test = exps_test[testkeep]
 ses_test = ses_test[testkeep]
+spfs_test = spfs_test[testkeep] # Added 11-Aug-2023
 EEGses_test = EEGses_test[testkeep]
 
 
 # Export data to JASP
-N200rtdata_test = np.vstack((n200lat_test, n200_test, rt_test, acc_test, conds_test, EEGses_test, exps_test, ses_test, truesubs_test)).T
+N200rtdata_test = np.vstack((n200lat_test, n200_test, rt_test, acc_test, conds_test, EEGses_test, exps_test, ses_test, spfs_test, truesubs_test)).T
 
 np.savetxt(
     'TEST_N200_rt_window_150_275.csv',    # file name
@@ -214,7 +220,7 @@ np.savetxt(
     fmt='%.4f',             # formatting, 4 digits in this case
     delimiter=',',          # column delimiter
     newline='\n',           # new line character
-    header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, True Subject Index'
+    header='Single-trial N200 latencies, N200 amplitudes, RT, Accuracy, SNR condition, EEG Session Counter, Experiment, Session, Spatial Frequency, True Subject Index'
 )      # file header
 
 

@@ -1,6 +1,6 @@
 # pdm4b_dataext.py - Extracts cleaned EEG from each subject, saves data
 #
-# Copyright (C) 2017 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2023 Michael D. Nunez, <m.d.nunez@uva.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,15 @@
 # Date            Programmers                         Descriptions of Change
 # ====         ================                       ======================
 # 06/22/16     Michael Nunez                   Converted from pdm5b_dataext.py
+# 11-Aug-2023  Michael Nunez         Extract spatial frequency information
 
 # Imports
 import numpy as np
 import scipy.io as sio
 import os.path
 
-dataloc = '/data10/michael/pdm/exp4data/subjects/{0}/{1}/{0}_cleaned.mat'
-saveloc = '/data10/michael/pdm/exp4data/subjects/{0}/{0}_allcleaned.npz'
+dataloc = '/media/michael/My Book/data4/pdm/exp4data/subjects/{0}/{1}/{0}_cleaned.mat'
+saveloc = '/media/michael/My Book/data4/pdm/exp4data/subjects/{0}/{0}_allcleaned.npz'
 
 subjects = ['s100', 's101', 's64', 's68', 's80',
             's82', 's93', 's94', 's95', 's96', 's97', 's59']
@@ -45,6 +46,7 @@ for subdes in subjects:
     data['noisetimes'] = np.empty((480 * 2))
     data['snrvec'] = np.empty((480 * 2))
     data['randrots'] = np.empty((480 * 2))
+    data['spfs'] = np.empty((480 * 2)) # Added 11-Aug-2023
     data['block'] = np.empty((480 * 2))
     data['artifact'] = np.empty((129, 480 * 2), dtype='bool')
     data['session'] = []
@@ -70,6 +72,8 @@ for subdes in subjects:
                 'expinfo'][0][0]['noisetimes'])
             data['randrots'][thesetrials] = np.squeeze(dataout[
                 'expinfo'][0][0]['randrots'])
+            data['spfs'][thesetrials] = np.squeeze(dataout[
+                'expinfo'][0][0]['spfs']) # Added 11-Aug-2023
             data['block'][thesetrials] = np.concatenate((np.ones(60)*1,
                 np.ones(60)*2, np.ones(60)*3, np.ones(60)*4, np.ones(60)*5,
                 np.ones(60)*6, np.ones(60)*7, np.ones(60)*8))

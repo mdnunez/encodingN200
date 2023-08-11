@@ -1,6 +1,6 @@
 # pdm5b_prepinputs.py - Creates data matrix for statistical models
 #
-# Copyright (C) 2019 Michael D. Nunez, <mdnunez1@uci.edu>
+# Copyright (C) 2023 Michael D. Nunez, <m.d.nunez@uva.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 # 06/01/18                                Create index for N200 waveforms
 # 01/04/19      Michael Nunez          Export data after lowpass filtering with different parameters
 #                                          Revert to original script
-
+# 11-Aug-2023  Michael Nunez         Extract spatial frequency information
 
 # Imports
 from __future__ import division
@@ -39,10 +39,11 @@ from IPython import get_ipython  # Run magic functions from script
 get_ipython().magic('pylab')
 
 # Initial
-dataloc = '/data10/michael/pdm/{1}/{0}/{0}_allcleaned.npz'
-indxloc = '/data10/michael/pdm/{1}/{0}/{0}_traintestindx.npz'
-svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
-saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
+dataloc = '/media/michael/My Book/data4/pdm/{1}/{0}/{0}_allcleaned.npz'
+indxloc = '/media/michael/My Book/data4/pdm/{1}/{0}/{0}_traintestindx.npz'
+svdloc = '/media/michael/My Book/data4/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v5.mat'
+saveloc = '/media/michael/My Book/data4/pdm/exp5data/jagsin/behav_strint9'
+# saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint7'
 # svdloc = '/data10/michael/pdm/{2}/{0}/{1}/erp_svd_{0}_{1}_v6.mat'
 # saveloc = '/data10/michael/pdm/exp5data/jagsin/behav_strint8'
 
@@ -79,15 +80,16 @@ dataout['subjects'] = ['s59', 's64', 's68', 's80', 's82', 's93',
                        's110']
 
 # Initialize data vectors
-fields = ['rt', 'correct', 'randrots', 'block', 'artifact',
+fields = ['rt', 'correct', 'randrots', 'spfs', 'block',
           'subject', 'experiment', 'n200lat', 'n1lat', 'n200', 'n1',
-          'n1deflec', 'n1deflec_slope']
+          'n1deflec', 'n1deflec_slope']  # Add 'spfs' on 11-Aug-2023
 for f in fields:
     dataout[f] = np.empty((480 * (12 * 2 + 4 * 7)))
 dataout['session'] = np.empty((480 * (12 * 2 + 4 * 7)))
 dataout['missing'] = np.zeros((480 * (12 * 2 + 4 * 7)))
 dataout['train'] = np.ones((480 * (12 * 2 + 4 * 7)))
 dataout['condition'] = np.zeros((480 * (12 * 2 + 4 * 7)))
+dataout['artifact'] = np.zeros((129, 480 * (12 * 2 + 4 * 7))) # Fixed on 11-Aug-2023
 dataout['n1data'] = np.zeros((375, 3 * (12 * 2 + 4 * 7)))
 dataout['n1datacond'] = np.zeros((3 * (12 * 2 + 4 * 7)))
 dataout['n1dataexp'] = np.zeros((3 * (12 * 2 + 4 * 7)))
@@ -167,7 +169,7 @@ for exp in dataout['experiments']:
                 else:
                     n1dataindx += 3
                     dataout['missing'][sestrials] = np.ones(480)
-                    dataout['artifact'][sestrials] = np.ones(480)
+                    dataout['artifact'][:, sestrials] = np.ones((129,480)) # Fixed on 11-Aug-2023
                     # Generate random conditions for missing sessions
                     dataout['condition'][sestrials] = np.concatenate((
                         np.ones(160) * 0, np.ones(160) * 1, np.ones(160) * 2))
